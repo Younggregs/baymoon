@@ -1,0 +1,38 @@
+{
+  "name": "baymoon-admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.13",
+    "@mui/material": "^5.14.13",
+    "@mui/x-charts": "^6.0.0-alpha.15",
+    "@mui/x-date-pickers": "^6.16.2",
+    "@urql/next": "^1.1.0",
+    "dayjs": "^1.11.10",
+    "graphql": "^16.8.1",
+    "next": "13.5.4",
+    "next-urql": "^5.0.2",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-dropzone": "^14.2.3",
+    "react-loader-spinner": "^5.4.5",
+    "react-responsive-carousel": "^3.2.23",
+    "urql": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "13.5.4",
+    "typescript": "^5"
+  }
+}
