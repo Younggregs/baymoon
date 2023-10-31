@@ -45,7 +45,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CREATE_TRANSACTION } from '@/app/utils/mutations';
 import { useMutation, useQuery } from 'urql';
 import { FETCH_PROPERTIES, FETCH_UNITS } from '@/app/utils/queries';
-import { create } from 'domain';
+import ActivityIndicator from '../../components/activity-indicator';
 
 const drawerWidth = 240;
 
@@ -53,6 +53,7 @@ const drawerWidth = 240;
 export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [amount, setAmount] = React.useState('')
   const [title, setTitle] = React.useState('')
   const [description, setDescription] = React.useState('')
@@ -71,6 +72,7 @@ export default function Page() {
   const [createTransactionResult, createTransaction] = useMutation(CREATE_TRANSACTION);
 
   const submit = async () => {
+    setIsLoading(true)
     const data = {
       title,
       amount: parseInt(amount),
@@ -82,6 +84,7 @@ export default function Page() {
       payment_method
     }
     createTransaction(data).then((res) => {
+      setIsLoading(false)
       if (res.error) {
         console.log('Error creating income')
       } else {
@@ -485,8 +488,11 @@ export default function Page() {
             container 
             spacing={2} 
             style={{marginTop: '15px'}}
+            alignItems="center"
+            justifyContent="center"
         >
-            {/* Create User button */}
+          {isLoading ? <ActivityIndicator /> : 
+          (
             <Button 
                 variant="contained" 
                 onClick={submit}
@@ -501,6 +507,7 @@ export default function Page() {
             >
               Create Expense
             </Button>
+          )}
         </Grid>
         
       </Box>

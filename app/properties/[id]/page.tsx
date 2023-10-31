@@ -267,10 +267,10 @@ export default function Page(props: Props) {
 
         <Grid
           item
-          xs={3}
+          xs={6}
+          sm={3}
           container
           direction={'column'}
-          alignItems={'center'}
         >
             <Grid>
                 <Typography
@@ -285,15 +285,16 @@ export default function Page(props: Props) {
                 >
                   {data?.propertyById?.name}
                 </Typography>
+                <Divider style={{margin: '10px'}} />
             </Grid>
         </Grid>
 
         <Grid
           item
-          xs={3}
+          xs={6}
+          sm={3}
           container
           direction={'column'}
-          alignItems={'center'}
         >
             <Grid>
                 <Typography
@@ -308,15 +309,16 @@ export default function Page(props: Props) {
                 >
                   {data?.propertyById?.location?.state} {data?.propertyById?.location?.lga}
                 </Typography>
+                <Divider style={{margin: '10px'}} />
             </Grid>
         </Grid>
 
         <Grid
           item
-          xs={3}
+          xs={6}
+          sm={3}
           container
           direction={'column'}
-          alignItems={'center'}
         >
             <Grid>
                 <Typography
@@ -331,15 +333,16 @@ export default function Page(props: Props) {
                 >
                   {data?.propertyById?.tenants}
                 </Typography>
+                <Divider style={{margin: '10px'}} />
             </Grid>
         </Grid>
 
         <Grid
           item
-          xs={3}
+          xs={6}
+          sm={3}
           container
           direction={'column'}
-          alignItems={'center'}
         >
             <Grid>
                 <Typography
@@ -354,6 +357,7 @@ export default function Page(props: Props) {
                 >
                   {data?.propertyById?.units}
                 </Typography>
+                <Divider style={{margin: '10px'}} />
             </Grid>
         </Grid>
 
@@ -390,16 +394,16 @@ export default function Page(props: Props) {
                 justifyContent="center"
                 alignItems="center"
                 style={{
-                    width: '300px',
-                    height: '50px', 
-                    padding: '12px 20px',
-                    margin: '8px 0',
-                    boxSizing: 'border-box',
-                    border: '1px solid #000',
-                    borderRadius: '25px',
-                    backgroundColor: '#fff',
-                    color: '#000',
-                    fontSize: '16px',
+                  maxWidth: '300px',
+                  height: '50px', 
+                  padding: '12px 20px',
+                  marginRight: '5px',
+                  boxSizing: 'border-box',
+                  border: '1px solid #000',
+                  borderRadius: '25px',
+                  backgroundColor: '#fff',
+                  color: '#000',
+                  fontSize: '16px',
                 }}
             >
                 <input
@@ -407,15 +411,13 @@ export default function Page(props: Props) {
                     placeholder="Search Units"
                     onChange={(e) => setSearch(e.target.value)}
                     style={{
-                        width: '200px',
-                        height: '50px', 
-                        padding: '12px 20px',
-                        margin: '8px 0',
-                        backgroundColor: '#fff',
-                        color: '#000',
-                        fontSize: '16px',
-                        border: 'none',
-                        outline: 'none',
+                      maxWidth: '200px',
+                      height: '50px',
+                      backgroundColor: '#fff',
+                      color: '#000',
+                      fontSize: '16px',
+                      border: 'none',
+                      outline: 'none',
                     }}
                 />
                 <IconButton>
@@ -427,12 +429,12 @@ export default function Page(props: Props) {
             <Button 
                 variant="contained" 
                 style={{
-                    marginLeft: 'auto', 
-                    backgroundColor: '#000', 
-                    height: '50px',
-                    color: '#fff',
-                    borderRadius: '10px',
-                    fontWeight: 'bold',
+                  marginLeft: '5px', 
+                  backgroundColor: '#000', 
+                  height: '50px',
+                  color: '#fff',
+                  borderRadius: '10px',
+                  fontWeight: 'bold',
                 }}
             >
                 <Link href={`/properties/${params?.id}/unit/create`}>

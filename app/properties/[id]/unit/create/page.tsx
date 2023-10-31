@@ -29,22 +29,16 @@ import Typography from '@mui/material/Typography';
 import stylesMain from '../../../../page.module.css';
 import Button from '@mui/material/Button';
 import ProfileMenu from '../../../../components/navigation/profile-menu';
-import Link from "next/link"
 import { useRouter, useSearchParams } from 'next/navigation'
-import Table from '../../../../components/properties/table';
 import Grid from '@mui/material/Grid';
-import SearchIcon from '@mui/icons-material/Search';
 import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormHelperText from '@mui/material/FormHelperText';
-import Checkbox from '@mui/material/Checkbox';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { CREATE_UNIT } from '@/app/utils/mutations';
 import { useMutation } from "urql";
 import Image from 'next/image'
+import ActivityIndicator from '@/app/components/activity-indicator';
 
 const drawerWidth = 240;
 const thumbsContainer = {
@@ -87,6 +81,7 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false)
   const [published, setPublished] = React.useState(0);
   const [category, setCategory] = React.useState('');
   const [type, setType] = React.useState('');
@@ -105,7 +100,7 @@ export default function Page(props: Props) {
   const [createUnitResult, createUnit] = useMutation(CREATE_UNIT);
 
   const submit = async () => {
-
+    setIsLoading(true)
     const data = {
         property_id: params.id,
         name,
@@ -125,6 +120,7 @@ export default function Page(props: Props) {
     }
     
     createUnit(data).then(result => {
+      setIsLoading(false)
       const res = result?.data?.createPropertyUnit as any
       if (result.error) {
         console.error('Oh no!', result.error);
@@ -174,6 +170,8 @@ export default function Page(props: Props) {
         <Image
           src={file.preview}
           style={style.img}
+          width={150}
+          height={150}
           alt="Preview"
           // Revoke data uri after image is loaded
           onLoad={() => { URL.revokeObjectURL(file.preview) }}
@@ -792,7 +790,8 @@ export default function Page(props: Props) {
             item
             xs={10}
           >
-            {/* Create User button */}
+            {isLoading ? <ActivityIndicator /> : 
+            (
             <Button 
                 variant="contained" 
                 onClick={submit}
@@ -807,6 +806,7 @@ export default function Page(props: Props) {
             >
               Create Unit
             </Button>
+            )}  
         </Grid>
 
         </Grid>

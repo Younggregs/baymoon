@@ -31,30 +31,23 @@ import Typography from '@mui/material/Typography';
 import stylesMain from '../../page.module.css';
 import Button from '@mui/material/Button';
 import ProfileMenu from '../../components/navigation/profile-menu';
-import Link from "next/link"
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Grid from '@mui/material/Grid';
-import SearchIcon from '@mui/icons-material/Search';
 import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormHelperText from '@mui/material/FormHelperText';
-import Checkbox from '@mui/material/Checkbox';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { FETCH_PROPERTIES, FETCH_UNITS } from '@/app/utils/queries'
 import { useMutation, useQuery } from 'urql';
 import { CREATE_TENANT } from '@/app/utils/mutations';
-import { stringify } from 'querystring';
+import ActivityIndicator from '../../components/activity-indicator';
 
 const drawerWidth = 240;
 
 export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [status, setStatus] = React.useState('');
-  const [type, setType] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false)
   const [property, setProperty] = React.useState('');
   const [unit, setUnit] = React.useState('');
   const [first_name, setFirstName] = React.useState('');
@@ -73,6 +66,7 @@ export default function Page() {
 
 
   const submit = () => {
+    setIsLoading(true)
     const data = {
       first_name,
       last_name,
@@ -83,6 +77,7 @@ export default function Page() {
       more_info: JSON.stringify(todos)
     }
     createTenant(data).then((result) => {
+      setIsLoading(false)
       if (result.data?.createTenant?.success) {
         router.push('/tenants')
       }
@@ -693,7 +688,8 @@ export default function Page() {
             item
             xs={10}
           >
-            {/* Create User button */}
+          {isLoading ? <ActivityIndicator /> : 
+          (
             <Button 
                 variant="contained" 
                 onClick={submit}
@@ -708,6 +704,7 @@ export default function Page() {
             >
                 Create Tenant
             </Button>
+          )}
         </Grid>
 
         </Grid>

@@ -223,70 +223,7 @@ export default function Page() {
       <Box
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, color: '#000' }}
       >
-        <Toolbar>
-          {/* Add Property Button */}
-          <Button 
-            variant="contained" 
-            style={{
-              marginLeft: 'auto', 
-              backgroundColor: '#000', 
-              height: '50px',
-              color: '#fff',
-              borderRadius: '10px',
-              fontWeight: 'bold',
-            }}
-            onClick={() => router.push('/properties/create')}
-          >
-            Add Property
-          </Button>
-
-          <Button 
-            variant="contained" 
-            style={{
-              marginLeft: 'auto', 
-              backgroundColor: '#000', 
-              height: '50px',
-              color: '#fff',
-              borderRadius: '10px',
-              fontWeight: 'bold',
-            }}
-            onClick={() => router.push('/tenants/create')}
-          >
-            Add Tenant/Owner
-          </Button>
-
-          <Button 
-            variant="contained" 
-            style={{
-              marginLeft: 'auto', 
-              backgroundColor: '#000', 
-              height: '50px',
-              color: '#fff',
-              borderRadius: '10px',
-              fontWeight: 'bold',
-            }}
-            onClick={() => router.push('/income/create')}
-          >
-            Record Income
-          </Button>
-
-          <Button 
-            variant="contained" 
-            style={{
-              marginLeft: 'auto', 
-              backgroundColor: '#000', 
-              height: '50px',
-              color: '#fff',
-              borderRadius: '10px',
-              fontWeight: 'bold',
-            }}
-            onClick={() => router.push('/expenses/create')}
-          >
-            Record Expense
-          </Button>
-
-
-        </Toolbar>
+        
         {/* Dashboard */}
         <Grid
           container
@@ -361,7 +298,7 @@ export default function Page() {
                 component="div" 
                 sx={style.label}
             >
-              Total Units (Quantity)
+              Total Units
             </Typography>
             <Typography
                 variant="h5" 
@@ -378,7 +315,7 @@ export default function Page() {
 
         <Grid
           item
-          xs={4}
+          xs={6}
           container
           direction={'column'}
           alignItems={'center'}
@@ -401,30 +338,7 @@ export default function Page() {
 
         <Grid
           item
-          xs={4}
-          container
-          direction={'column'}
-          alignItems={'center'}
-          justifyItems={'center'}
-        >
-            <Typography
-                component="div" 
-                sx={style.label}
-            >
-              Total Balance
-            </Typography>
-            <Typography
-                variant="h3" 
-                component="div" 
-                sx={style.value}
-            >
-                ${data?.summary?.balance}
-            </Typography>
-        </Grid>
-
-        <Grid
-          item
-          xs={4}
+          xs={6}
           container
           direction={'column'}
           alignItems={'center'}
@@ -445,6 +359,103 @@ export default function Page() {
           </Typography>
         </Grid>
 
+        <Grid
+          item
+          xs={12}
+          container
+          direction={'column'}
+          alignItems={'center'}
+          justifyItems={'center'}
+        >
+            <Typography
+                component="div" 
+                sx={style.label}
+            >
+              Total Balance
+            </Typography>
+            <Typography
+                variant="h3" 
+                component="div" 
+                sx={style.value}
+            >
+                ${data?.summary?.balance}
+            </Typography>
+        </Grid>
+
+        </Grid>
+
+        <Grid
+          container
+          spacing={2}
+        >
+          {/* Add Property Button */}
+
+        <Grid item xs={6} sm={3}>
+          <Button 
+            variant="contained" 
+            style={{
+              marginLeft: 'auto', 
+              backgroundColor: '#000', 
+              height: '50px',
+              color: '#fff',
+              borderRadius: '10px',
+              fontWeight: 'bold',
+            }}
+            onClick={() => router.push('/properties/create')}
+          >
+            Add Property
+          </Button>
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          <Button 
+            variant="contained" 
+            style={{
+              marginLeft: 'auto', 
+              backgroundColor: '#000', 
+              height: '50px',
+              color: '#fff',
+              borderRadius: '10px',
+              fontWeight: 'bold',
+            }}
+            onClick={() => router.push('/tenants/create')}
+          >
+            Add Tenant/Owner
+          </Button>
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          <Button 
+            variant="contained" 
+            style={{
+              marginLeft: 'auto', 
+              backgroundColor: '#000', 
+              height: '50px',
+              color: '#fff',
+              borderRadius: '10px',
+              fontWeight: 'bold',
+            }}
+            onClick={() => router.push('/income/create')}
+          >
+            Record Income
+          </Button>
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          <Button 
+            variant="contained" 
+            style={{
+              marginLeft: 'auto', 
+              backgroundColor: '#000', 
+              height: '50px',
+              color: '#fff',
+              borderRadius: '10px',
+              fontWeight: 'bold',
+            }}
+            onClick={() => router.push('/expenses/create')}
+          >
+            Record Expense
+          </Button>
+        </Grid>
+
+
         </Grid>
 
 
@@ -452,7 +463,7 @@ export default function Page() {
           container
           spacing={2}
         >
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
               <Grid style={style.splitboard}>
                   <Typography 
                       variant="h6" 
@@ -480,7 +491,7 @@ export default function Page() {
               </Grid>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
           <Grid style={style.splitboard}>
                   <Typography 
                       variant="h6" 

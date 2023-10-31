@@ -228,10 +228,10 @@ export default function Page() {
                 justifyContent="center"
                 alignItems="center"
                 style={{
-                    width: '300px',
+                    maxWidth: '300px',
                     height: '50px', 
                     padding: '12px 20px',
-                    margin: '8px 0',
+                    marginRight: '5px',
                     boxSizing: 'border-box',
                     border: '1px solid #000',
                     borderRadius: '25px',
@@ -244,10 +244,8 @@ export default function Page() {
                     type="text"
                     placeholder="Search Users"
                     style={{
-                        width: '200px',
-                        height: '50px', 
-                        padding: '12px 20px',
-                        margin: '8px 0',
+                        maxWidth: '200px',
+                        height: '50px',
                         backgroundColor: '#fff',
                         color: '#000',
                         fontSize: '16px',
@@ -266,7 +264,7 @@ export default function Page() {
             <Button 
                 variant="contained" 
                 style={{
-                    marginLeft: 'auto', 
+                    marginLeft: '5px', 
                     backgroundColor: '#000', 
                     height: '50px',
                     color: '#fff',

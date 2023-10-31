@@ -222,36 +222,34 @@ export default function Page() {
         <Toolbar>
           {/* Search bar */}
           <Grid
-                container
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-                style={{
-                    width: '300px',
-                    height: '50px', 
-                    padding: '12px 20px',
-                    margin: '8px 0',
-                    boxSizing: 'border-box',
-                    border: '1px solid #000',
-                    borderRadius: '25px',
-                    backgroundColor: '#fff',
-                    color: '#000',
-                    fontSize: '16px',
-                }}
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              style={{
+                maxWidth: '300px',
+                height: '50px', 
+                padding: '12px 20px',
+                marginRight: '5px',
+                boxSizing: 'border-box',
+                border: '1px solid #000',
+                borderRadius: '25px',
+                backgroundColor: '#fff',
+                color: '#000',
+                fontSize: '16px',
+              }}
             >
                 <input
                     type="text"
                     placeholder="Search Expenses"
                     style={{
-                        width: '200px',
-                        height: '50px', 
-                        padding: '12px 20px',
-                        margin: '8px 0',
-                        backgroundColor: '#fff',
-                        color: '#000',
-                        fontSize: '16px',
-                        border: 'none',
-                        outline: 'none',
+                      maxWidth: '200px',
+                      height: '50px',
+                      backgroundColor: '#fff',
+                      color: '#000',
+                      fontSize: '16px',
+                      border: 'none',
+                      outline: 'none',
                     }}
                 />
                 <IconButton>
@@ -263,12 +261,12 @@ export default function Page() {
             <Button 
                 variant="contained" 
                 style={{
-                    marginLeft: 'auto', 
-                    backgroundColor: '#000', 
-                    height: '50px',
-                    color: '#fff',
-                    borderRadius: '10px',
-                    fontWeight: 'bold',
+                  marginLeft: '5px', 
+                  backgroundColor: '#000', 
+                  height: '50px',
+                  color: '#fff',
+                  borderRadius: '10px',
+                  fontWeight: 'bold',
                 }}
             >
                 <Link href="/expenses/create">

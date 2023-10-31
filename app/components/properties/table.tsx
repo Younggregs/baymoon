@@ -342,7 +342,7 @@ export default function EnhancedTable({data}: {data: any[]}) {
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ width: '80vw' }}
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
           >

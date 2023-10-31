@@ -28,15 +28,9 @@ import Typography from '@mui/material/Typography';
 import stylesMain from '../../page.module.css';
 import Button from '@mui/material/Button';
 import ProfileMenu from '../../components/navigation/profile-menu';
-import Link from "next/link"
-import { useRouter, useSearchParams } from 'next/navigation'
-import Table from '../../components/properties/table';
+import { useRouter } from 'next/navigation'
 import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormHelperText from '@mui/material/FormHelperText';
-import Checkbox from '@mui/material/Checkbox';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -44,13 +38,14 @@ import { useMutation } from "urql";
 import { CREATE_PROPERTY } from "../../utils/mutations";
 import { lga_list } from '@/app/lib/location/lga';
 import { state_list } from '@/app/lib/location/states';
+import ActivityIndicator from '../../components/activity-indicator';
 
 const drawerWidth = 240;
 
 export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [status, setStatus] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false)
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [errors, setErrors] = React.useState('');
@@ -60,6 +55,7 @@ export default function Page() {
   const [createPropertyResult, createProperty] = useMutation(CREATE_PROPERTY);
 
   const submit = async () => {
+    setIsLoading(true)
     const data = {
         name: name,
         state: state,
@@ -67,6 +63,7 @@ export default function Page() {
         description: description
     }
     createProperty(data).then(result => {
+      setIsLoading(false)
       const res = result?.data?.createProperty as any
       if (result.error) {
         console.error('Oh no!', result.error);
@@ -384,8 +381,11 @@ export default function Page() {
             container 
             spacing={2} 
             style={{marginTop: '15px'}}
+            alignItems="center"
+            justifyContent="center"
         >
-            {/* Create User button */}
+            {isLoading ? <ActivityIndicator /> : 
+            (
             <Button 
                 variant="contained" 
                 onClick={submit}
@@ -400,6 +400,7 @@ export default function Page() {
             >
               Create Property
             </Button>
+            )}
         </Grid>
         
       </Box>

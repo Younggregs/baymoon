@@ -320,7 +320,7 @@ export default function Page(props: Props) {
 
               <Grid
                 item
-                xs={2}
+                xs={4}
               >
                 <Typography
                   variant={'h5'}

@@ -43,6 +43,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Checkbox from '@mui/material/Checkbox';
 import { CREATE_USER } from '@/app/utils/mutations';
 import { useMutation } from "urql";
+import ActivityIndicator from '../../components/activity-indicator';
 
 const drawerWidth = 240;
 
@@ -565,8 +566,12 @@ export default function Page() {
             container 
             spacing={2} 
             style={{marginTop: '15px'}}
+            alignItems="center"
+            justifyContent="center"
         >
-            {/* Create User button */}
+          {/* Create User button */}
+          {isLoading ? <ActivityIndicator /> : 
+          (
             <Button 
                 variant="contained" 
                 onClick={submit}
@@ -583,6 +588,8 @@ export default function Page() {
                     Create New User
                 </Link>
             </Button>
+          )}
+            
         </Grid>
         
       </Box>
