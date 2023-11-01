@@ -5,6 +5,7 @@ import {
   TextField,
   Grid,
   Button,
+  Typography,
 } from "@mui/material";
 import FormError from "../components/errors/form-error"
 import ActivityIndicator from "../components/activity-indicator";
@@ -48,11 +49,13 @@ export default function Signup() {
     const password = data?.verifyEmailToken.rawToken
     const email = data?.verifyEmailToken.email
 
-    const name_ = first_name || data?.verifyEmailToken?.name
+    const first_name_ = first_name || data?.verifyEmailToken?.firstName
+    const last_name_ = last_name || data?.verifyEmailToken?.lastName
+    const phone_number_ = phone_number || data?.verifyEmailToken?.phoneNumber
     const data_ = {
-        first_name: first_name,
-        last_name: last_name,
-        phone_number: phone_number,
+        first_name: first_name_,
+        last_name: last_name_,
+        phone_number: phone_number_,
         email,
         password
     }
@@ -64,8 +67,12 @@ export default function Signup() {
         setErrors(res?.errors.message)
       }
       else{
-        localStorage.setItem('name', name_);
-        processLogin({ email: email, password})
+        localStorage.setItem('first_name', first_name_);
+        localStorage.setItem('last_name', last_name_)
+        localStorage.setItem('phone_number', phone_number_)
+        localStorage.setItem('email', email)
+        localStorage.setItem('permissions', data?.verifyEmailToken?.permissions)
+        processLogin({ email, password})
       }
     });
     
@@ -94,7 +101,7 @@ export default function Signup() {
   }
 
   return (
-    <main className={stylesMain.main} style={{backgroundColor: '#fff'}}>
+    <main className={stylesMain.main1} style={{backgroundColor: '#fff'}}>
       <Grid container>
         <Grid 
           style={styles.headerBox} 
@@ -103,7 +110,12 @@ export default function Signup() {
           justifyContent="flex-start"
           alignItems="flex-end"
         >
-          {/* <Logo shade="dark" /> */}
+          <Typography
+            variant="h3"
+            sx={{color: '#000'}}
+          >
+            Baymoon
+          </Typography>
         </Grid>
       </Grid>
 

@@ -40,7 +40,11 @@ const VERIFY_EMAIL_TOKEN = gql`
         isReturning,
         rawToken,
         email,
-        name
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        permissions
     }
   }
 `;

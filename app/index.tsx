@@ -30,6 +30,7 @@ import Grid from '@mui/material/Grid';
 import { PieChart, pieArcClasses } from '@mui/x-charts/PieChart';
 import { useQuery } from 'urql';
 import { FETCH_SUMMARY } from './utils/queries';
+import NameTitle from './components/users/name-title';
 
 const drawerWidth = 240;
 
@@ -172,12 +173,7 @@ export default function Page() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography 
-            variant="h6" noWrap component="div" 
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }}}
-          >
-            Hello Retzam
-          </Typography>
+          <NameTitle />
           <Typography 
             variant="h6" noWrap component="div" 
             sx={{ flexGrow: 1, display: { sm: 'none' }}}

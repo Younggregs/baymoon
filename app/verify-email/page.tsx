@@ -5,6 +5,7 @@ import {
   TextField,
   Grid,
   Button,
+  Typography,
 } from "@mui/material";
 import ActivityIndicator from "../components/activity-indicator";
 import { cardWidth } from "../lib/constants";
@@ -44,7 +45,7 @@ export default function VerifyEmail() {
   };
 
   return (
-    <main className={styles_.main} style={{backgroundColor: '#fff'}}>
+    <main className={styles_.main1} style={{backgroundColor: '#fff'}}>
 
       <Grid container>
         <Grid 
@@ -54,7 +55,12 @@ export default function VerifyEmail() {
           justifyContent="flex-start"
           alignItems="flex-end"
         >
-          {/* <Logo shade="dark" /> */}
+          <Typography
+            variant="h3"
+            sx={{color: '#000'}}
+          >
+            Baymoon
+          </Typography>
         </Grid>
       </Grid>
 
