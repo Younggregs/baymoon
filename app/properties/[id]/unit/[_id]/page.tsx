@@ -36,39 +36,10 @@ import Grid from '@mui/material/Grid';
 import ImageCarousel from '@/app/components/properties/units/image-carousel';
 import { UNIT_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
+import { currencySymbols } from '@/app/lib/constants';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
-const thumbsContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16
-};
-
-const thumb = {
-  display: 'inline-flex',
-  borderRadius: 2,
-  border: '1px solid #eaeaea',
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: 'border-box'
-};
-
-const thumbInner = {
-  display: 'flex',
-  minWidth: 0,
-  overflow: 'hidden'
-};
-
-const img = {
-  display: 'block',
-  width: 'auto',
-  height: '100%'
-};
-
 interface Props {
   /**
    * Injected by the documentation to work in an iframe.
@@ -82,9 +53,11 @@ export default function Page(props: Props) {
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
+
   const [res] = useQuery({query: UNIT_BY_ID, variables: {id: params?._id} });
   const { data, fetching, error } = res;
-
+  
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -145,7 +118,7 @@ export default function Page(props: Props) {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}
@@ -313,7 +286,7 @@ export default function Page(props: Props) {
                   <Typography
                     style={style.value}
                   >
-                    Allen, Ikeja, Lagos
+                    {data?.unitById?.location?.lga}, {data?.unitById?.location?.state}
                   </Typography>
                 </Grid>
               </Grid>
@@ -326,7 +299,7 @@ export default function Page(props: Props) {
                   variant={'h5'}
                   style={style.value}
                 >
-                  ${data?.unitById?.price}
+                  {currencySymbols[data?.unitById?.currency as keyof typeof currencySymbols]}{data?.unitById?.price}
                 </Typography>
               </Grid>
 
@@ -376,7 +349,7 @@ export default function Page(props: Props) {
                 <Typography
                   style={style.value}
                 >
-                  ${data?.unitById?.price}
+                  {currencySymbols[data?.unitById?.currency as keyof typeof currencySymbols]}{data?.unitById?.price}
                 </Typography>
               </Grid>
               <Grid
@@ -391,7 +364,22 @@ export default function Page(props: Props) {
                 <Typography
                   style={style.value}
                 >
-                  Allen Ikeja, Lagos
+                  {data?.unitById?.location?.lga}, {data?.unitById?.location?.state}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+              >
+                <Typography
+                  style={style.label}
+                >
+                  Payment Plan
+                </Typography>
+                <Typography
+                  style={style.value}
+                >
+                  {data?.unitById?.paymentPlan}
                 </Typography>
               </Grid>
               <Grid
@@ -422,6 +410,36 @@ export default function Page(props: Props) {
                   style={style.value}
                 >
                   {data?.unitById?.propertyUnitFeatures.bathrooms}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+              >
+                <Typography
+                  style={style.label}
+                >
+                  Toilets
+                </Typography>
+                <Typography
+                  style={style.value}
+                >
+                  {data?.unitById?.propertyUnitFeatures.toilets}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+              >
+                <Typography
+                  style={style.label}
+                >
+                  Parking Space
+                </Typography>
+                <Typography
+                  style={style.value}
+                >
+                  {data?.unitById?.propertyUnitFeatures.parkingSpace}
                 </Typography>
               </Grid>
               <Grid
@@ -470,23 +488,26 @@ export default function Page(props: Props) {
                 <Divider style={{margin: '10px'}} />
               </Grid>
 
+              {data?.unitById?.contactUsers?.map((item: { firstName: string; lastName: string; phoneNumber: string; }) =>
               <Grid
                 item
-                xs={6}
+                xs={12}
+                sm={4}
+                key={item.phoneNumber}
               >
                 <Typography
                   style={style.label}
                 >
-                  Phone number
+                  {item.firstName} {item.lastName}
                 </Typography>
                 <Typography
                   style={style.value}
                 >
-                  08109599594
+                  {item.phoneNumber}
                 </Typography>
-                
-              </Grid>
-
+              </Grid> 
+              )}
+              
             </Grid>
           </Grid>
           {/* End of Details */}

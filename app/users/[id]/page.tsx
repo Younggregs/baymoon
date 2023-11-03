@@ -43,6 +43,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Checkbox from '@mui/material/Checkbox';
 import { USER_BY_ID, DELETE_USER } from '@/app/utils/queries';
 import { useQuery } from 'urql';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
 
@@ -54,6 +55,9 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
+
   const [res] = useQuery({query: USER_BY_ID, variables: {id: params?.id} });
   const { data, fetching, error: error_ } = res;
 
@@ -149,7 +153,7 @@ export default function Page(props: Props) {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}

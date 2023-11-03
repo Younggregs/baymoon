@@ -41,12 +41,16 @@ import { FETCH_PROPERTIES, FETCH_UNITS } from '@/app/utils/queries'
 import { useMutation, useQuery } from 'urql';
 import { CREATE_TENANT } from '@/app/utils/mutations';
 import ActivityIndicator from '../../components/activity-indicator';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
 
 export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
+
   const [isLoading, setIsLoading] = React.useState(false)
   const [property, setProperty] = React.useState('');
   const [unit, setUnit] = React.useState('');
@@ -165,7 +169,7 @@ export default function Page() {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}

@@ -149,6 +149,8 @@ const FETCH_UNITS = gql`
             id,
             name,
             quantity,
+            currency,
+            price,
             tenants,
             published,
             property{
@@ -167,6 +169,17 @@ const UNIT_BY_ID = gql`
       name,
       quantity,
       price,
+      currency,
+      paymentPlan,
+      contactUsers{
+        firstName,
+        lastName,
+        phoneNumber
+      },
+      location{
+        state 
+        lga
+      },
       description,
       propertyUnitFeatures{
         bathrooms,
@@ -271,6 +284,9 @@ const TRANSACTION_BY_ID = gql`
       title,
       description,
       amount,
+      currency,
+      type,
+      paymentMethod,
       property {
         name
       }
@@ -281,8 +297,8 @@ const TRANSACTION_BY_ID = gql`
 
 {/* Summary Queries */}
 const FETCH_SUMMARY = gql`
-  query {
-    summary {
+  query Summary($currency: String!){
+    summary(currency: $currency) {
       income,
       expense,
       balance,
@@ -292,7 +308,7 @@ const FETCH_SUMMARY = gql`
       units,
       properties
     }
-}
+  }
 `;
 {/* End of Summary Queries */}
 

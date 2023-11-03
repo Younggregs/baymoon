@@ -31,6 +31,8 @@ import { useRouter } from 'next/navigation'
 import Grid from '@mui/material/Grid';
 import { TRANSACTION_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
+import { currencySymbols } from '@/app/lib/constants';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
 
@@ -42,6 +44,9 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
+
   const [res] = useQuery({query: TRANSACTION_BY_ID, variables: {id: params?.id} });
   const { data, fetching, error: error_ } = res;
 
@@ -126,7 +131,7 @@ export default function Page(props: Props) {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}
@@ -287,11 +292,11 @@ export default function Page(props: Props) {
                 <Typography
                     variant="h3" 
                     component="div" 
-                    sx={{ fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}
-                >
-                  {data?.transactionById?.amount}
-                </Typography>
-                <Typography
+                            sx={{ fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}
+                        >
+                          {currencySymbols[data?.transactionById?.currency as keyof typeof currencySymbols]}{data?.transactionById?.amount}
+                        </Typography>
+                        <Typography
                     variant="h6" 
                     component="div" 
                     sx={{ fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}

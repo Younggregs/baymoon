@@ -45,6 +45,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { TENANT_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
 const thumbsContainer = {
@@ -90,8 +91,8 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [status, setStatus] = React.useState('');
-  const [category, setCategory] = React.useState('');
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
   const [res] = useQuery({query: TENANT_BY_ID, variables: {id: params?.id} });
   const { data, fetching, error } = res;
@@ -163,7 +164,7 @@ export default function Page(props: Props) {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}

@@ -15,23 +15,18 @@ import { LOGIN, SIGNUP } from "../utils/mutations";
 import { useRouter, useSearchParams } from 'next/navigation'
 import { VERIFY_EMAIL_TOKEN } from "../utils/queries";
 import Footer2 from "../components/footer/footer-2";
+import user from "../lib/user-details";
 // import Logo from "../components/logo";
 
 export default function Signup() {
   const router = useRouter()
-  // const [showPassword, setShowPassword] = React.useState(false);
+
   const [first_name, setFirstName] = React.useState("");
   const [last_name, setLastName] = React.useState("");
   const [phone_number, setPhoneNumber] = React.useState("");
   const [errors, setErrors] = React.useState('')
-  // const [password, setPassword] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
-  // const handleClickShowPassword = () => setShowPassword((show) => !show);
-  // const handleMouseDownPassword = (
-  //   event: React.MouseEvent<HTMLButtonElement>
-  // ) => {
-  //   event.preventDefault();
-  // };
+
   const searchParams = useSearchParams()
 
   const token = searchParams?.get('token')
@@ -190,7 +185,7 @@ export default function Signup() {
            ) : (
             <Grid>
               <p style={styles.text}>
-                Hello {data?.verifyEmailToken.name}, <br />
+                Hello {data?.verifyEmailToken.firstName} {data?.verifyEmailToken.lastName}, <br />
                 Pick up right where you left off</p>
             </Grid>
            )}

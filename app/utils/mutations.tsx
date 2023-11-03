@@ -72,8 +72,9 @@ const CREATE_PROPERTY = gql`
 
 {/* Property Unit Queries */}
 const CREATE_UNIT = gql`
-     mutation CreatePropertyUnit($property_id: String!,$name: String!, $category: String!, $type: String, $furnishing: String, $description: String!, $price: Int!, $quantity: Int!, $bathrooms: Int, $bedrooms: Int, $toilets: Int, $parking_space: Int, $floor_number: Int, $published: Boolean, $images: [Upload]) {
-  createPropertyUnit(propertyId: $property_id, name: $name, category: $category, type: $type, furnishing: $furnishing, description: $description, price: $price, quantity: $quantity, bathrooms: $bathrooms, bedrooms: $bedrooms, toilets: $toilets, parkingSpace: $parking_space, floorNumber: $floor_number, published: $published, images: $images) {
+     mutation CreatePropertyUnit($property_id: String!,$name: String!, $category: String!, $type: String, $furnishing: String, $description: String!, $price: Int!, $currency: String!, $contacts: [String!],
+     $payment_plan: String, $quantity: Int!, $bathrooms: Int, $bedrooms: Int, $toilets: Int, $parking_space: Int, $floor_number: Int, $published: Boolean, $images: [Upload]) {
+  createPropertyUnit(propertyId: $property_id, name: $name, category: $category, type: $type, furnishing: $furnishing, description: $description, price: $price, currency: $currency, contacts: $contacts, paymentPlan: $payment_plan, quantity: $quantity, bathrooms: $bathrooms, bedrooms: $bedrooms, toilets: $toilets, parkingSpace: $parking_space, floorNumber: $floor_number, published: $published, images: $images) {
     propertyUnit {
         id,
     },
@@ -104,8 +105,8 @@ const CREATE_TENANT = gql`
 
 {/* Transactions Queries */}
 const CREATE_TRANSACTION = gql`
-      mutation CreateTransaction($property_id: String!, $unit_id: String!, $title: String!, $amount: Int!, $type: String!, $description: String!, $payment_method: String) {
-  createTransaction(propertyId: $property_id, unitId: $unit_id, title: $title, amount: $amount,  type: $type, description: $description, paymentMethod: $payment_method) {
+      mutation CreateTransaction($property_id: String!, $unit_id: String!, $title: String!, $amount: Int!, $currency: String!, $type: String!, $description: String!, $payment_method: String) {
+  createTransaction(propertyId: $property_id, unitId: $unit_id, title: $title, amount: $amount, currency: $currency, type: $type, description: $description, paymentMethod: $payment_method) {
     transaction {
         id,
     },

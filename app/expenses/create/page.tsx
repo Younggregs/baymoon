@@ -46,6 +46,8 @@ import { CREATE_TRANSACTION } from '@/app/utils/mutations';
 import { useMutation, useQuery } from 'urql';
 import { FETCH_PROPERTIES, FETCH_UNITS } from '@/app/utils/queries';
 import ActivityIndicator from '../../components/activity-indicator';
+import { currencies } from '@/app/lib/constants';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
 
@@ -54,20 +56,30 @@ export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [amount, setAmount] = React.useState('')
-  const [title, setTitle] = React.useState('')
-  const [description, setDescription] = React.useState('')
-  const [payment_method, setPaymentMethod] = React.useState('')
-  const [date, setDate] = React.useState<Date | null>(new Date());
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
   const [property, setProperty] = React.useState('');
   const [unit, setUnit] = React.useState('');
+  const [currency, setCurrency] = React.useState('naira');
 
   const [res] = useQuery({query: FETCH_PROPERTIES, variables: {search: ""} });
   const { data: properties, fetching, error } = res;
 
   const [res2] = useQuery({query: FETCH_UNITS, variables: {id: property} });
   const { data: units, fetching: fetching2, error: error2 } = res2;
+
+  // set default amount as price of unit or ''
+  const price = units?.units?.edges?.find((u: { node: { id: string | number | readonly string[] | undefined; }; }) => u.node.id === unit)?.node?.price
+  const [amount, setAmount] = React.useState('')
+  const [title, setTitle] = React.useState('')
+  const [description, setDescription] = React.useState('')
+  const [payment_method, setPaymentMethod] = React.useState('')
+  const [date, setDate] = React.useState<Date | null>(new Date());
+
+  
+  console.log('amount: ', amount, currency)
+  
 
   const [createTransactionResult, createTransaction] = useMutation(CREATE_TRANSACTION);
 
@@ -81,7 +93,8 @@ export default function Page() {
       type: "expense",
       property_id: property,
       unit_id: unit,
-      payment_method
+      payment_method,
+      currency
     }
     createTransaction(data).then((res) => {
       setIsLoading(false)
@@ -127,13 +140,6 @@ export default function Page() {
     users: false
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      [event.target.name]: event.target.checked,
-    });
-  };
-
   const drawer = (
     <main 
       className={stylesMain.main1}
@@ -170,7 +176,7 @@ export default function Page() {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}
@@ -303,13 +309,28 @@ export default function Page() {
             </Typography>
         </Toolbar>
 
-        <Grid>
+        <Grid
+          container
+          style={styles.board}
+        >
             {/* Form */}
-            <Grid 
-                container 
+            <Grid item xs={12}>
+              <Typography 
+                    variant="h6" 
+                    component="div" 
+                    sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+                >
+                  Create Expense Record
+                </Typography>
+                <Divider style={{margin: '10px'}} />
+            </Grid>
+            <Grid
                 spacing={2} 
                 style={{marginTop: '5px'}}
                 direction="column"
+                item 
+                xs={12}
+                sm={6}
             >
                 <Typography fontWeight={'bold'}>
                     Title
@@ -334,11 +355,71 @@ export default function Page() {
                 />
             </Grid>
 
-            <Grid 
-                container 
+            <Grid
                 spacing={2} 
                 style={{marginTop: '5px'}}
                 direction="column"
+                item 
+                xs={12}
+                sm={6}
+            >
+                <Typography fontWeight={'bold'}>
+                    Select Property
+                </Typography>
+                <FormControl style={{marginTop: '10px', width: '250px'}}>
+                    <InputLabel id="demo-simple-select-label">Property</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={property}
+                        label="Property"
+                        onChange={(e) => setProperty(e.target.value)}
+                    >
+                      {properties?.properties?.edges?.map((property: { node: { id: string | number | readonly string[] | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | React.PromiseLikeOfReactNode | null | undefined; }; }, index: React.Key | null | undefined) => ( 
+                        <MenuItem key={index} value={property.node.id}>{property.node.name}</MenuItem>
+                      ))}
+                    </Select>
+                </FormControl>
+            </Grid>   
+
+            <Grid
+                spacing={2} 
+                style={{marginTop: '5px'}}
+                direction="column"
+                item 
+                xs={12}
+                sm={6}
+            >
+                <Typography fontWeight={'bold'}>
+                    Select Unit
+                </Typography>
+                <FormControl style={{marginTop: '10px', width: '250px'}}>
+                    <InputLabel id="demo-simple-select-label">Unit</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={unit}
+                        label="Unit"
+                        onChange={(e) => {
+                          setUnit(e.target.value), 
+                          setAmount(units?.units?.edges?.find((u: { node: { id: string | number | readonly string[] | undefined; }; }) => u.node.id === e.target.value)?.node?.price),
+                          setCurrency(units?.units?.edges?.find((u: { node: { id: string | number | readonly string[] | undefined; }; }) => u.node.id === e.target.value)?.node?.currency.toLowerCase())
+                         }}
+                    >
+                      {units?.units?.edges?.map((unit: { node: { id: string | number | readonly string[] | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | React.PromiseLikeOfReactNode | null | undefined; }; }, index: React.Key | null | undefined) => ( 
+                        <MenuItem key={index} value={unit.node.id}>{unit.node.name}</MenuItem>
+                      ))}
+                    </Select>
+                </FormControl>
+            </Grid>  
+
+            <Grid 
+                spacing={2} 
+                style={{marginTop: '5px'}}
+                direction="column"
+                item 
+                xs={12}
+                sm={6}
             >
                 <Typography fontWeight={'bold'}>
                     Amount
@@ -347,6 +428,7 @@ export default function Page() {
                     type="number"
                     placeholder="Amount"
                     onChange={(e) => setAmount(e.target.value)}
+                    value={amount}
                     style={{
                         width: '250px',
                         height: '50px', 
@@ -361,18 +443,47 @@ export default function Page() {
                         borderRadius: '5px',
                     }}
                 />
-            </Grid>
+            </Grid>  
 
-            <Grid 
-                container 
+            <Grid
                 spacing={2} 
                 style={{marginTop: '5px'}}
                 direction="column"
+                item 
+                xs={12}
+                sm={6}
+            >
+                <Typography fontWeight={'bold'}>
+                    Select Currency
+                </Typography>
+                <FormControl style={{marginTop: '10px', width: '250px'}}>
+                    <InputLabel id="demo-simple-select-label">Currency</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={currency}
+                        label="Currency"
+                        onChange={(e) => setCurrency(e.target.value)}
+                    >
+                      {currencies.map((c, index)=> ( 
+                        <MenuItem key={index} value={c.value}>{c.label}</MenuItem>
+                      ))}
+                    </Select>
+                </FormControl>
+            </Grid>  
+
+            <Grid
+                spacing={2} 
+                style={{marginTop: '5px'}}
+                direction="column"
+                item 
+                xs={12}
+                sm={6}
             >
                 <Typography fontWeight={'bold'}>
                     Select Payment Method
                 </Typography>
-                <FormControl fullWidth style={{marginTop: '10px'}}>
+                <FormControl style={{marginTop: '10px', width: '250px'}}>
                     <InputLabel id="demo-simple-select-label">Payment Method</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -390,60 +501,12 @@ export default function Page() {
             </Grid>
 
             <Grid 
-                container 
                 spacing={2} 
                 style={{marginTop: '5px'}}
                 direction="column"
-            >
-                <Typography fontWeight={'bold'}>
-                    Select Property
-                </Typography>
-                <FormControl fullWidth style={{marginTop: '10px'}}>
-                    <InputLabel id="demo-simple-select-label">Property</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={property}
-                        label="Property"
-                        onChange={(e) => setProperty(e.target.value)}
-                    >
-                      {properties?.properties?.edges?.map((property: { node: { id: string | number | readonly string[] | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | React.PromiseLikeOfReactNode | null | undefined; }; }, index: React.Key | null | undefined) => ( 
-                        <MenuItem key={index} value={property.node.id}>{property.node.name}</MenuItem>
-                      ))}
-                    </Select>
-                </FormControl>
-            </Grid>   
-
-            <Grid 
-                container 
-                spacing={2} 
-                style={{marginTop: '5px'}}
-                direction="column"
-            >
-                <Typography fontWeight={'bold'}>
-                    Select Unit
-                </Typography>
-                <FormControl fullWidth style={{marginTop: '10px'}}>
-                    <InputLabel id="demo-simple-select-label">Unit</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={unit}
-                        label="Unit"
-                        onChange={(e) => setUnit(e.target.value)}
-                    >
-                      {units?.units?.edges?.map((unit: { node: { id: string | number | readonly string[] | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | React.PromiseLikeOfReactNode | null | undefined; }; }, index: React.Key | null | undefined) => ( 
-                        <MenuItem key={index} value={unit.node.id}>{unit.node.name}</MenuItem>
-                      ))}
-                    </Select>
-                </FormControl>
-            </Grid>    
-
-            <Grid 
-                container 
-                spacing={2} 
-                style={{marginTop: '5px'}}
-                direction="column"
+                item 
+                xs={12}
+                sm={6}
             >
                 <Typography fontWeight={'bold'}>
                     Date of Payment
@@ -456,10 +519,12 @@ export default function Page() {
             </Grid>
 
              <Grid 
-                container 
+                container
                 spacing={2} 
                 style={{marginTop: '5px'}}
                 direction="column"
+                item 
+                xs={12}
             >
                 <Typography fontWeight={'bold'}>
                     Details
@@ -516,4 +581,17 @@ export default function Page() {
     </ThemeProvider>
     </main>
   );
+}
+
+const styles = {
+  board: {
+    width: '80vw',
+    borderRadius: '10px',
+    minHeight: '200px',
+    marginBottom: '20px',
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    backgroundColor: '#fff',
+    color: '#000',
+    padding: '20px',
+  },
 }

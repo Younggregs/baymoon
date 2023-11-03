@@ -5,7 +5,7 @@ const user = () => {
     let last_name = ""
     let phone_number = ""
     let email = ""
-    let permissions = []
+    let permissions: string[] = []
     if (typeof window !== 'undefined') {
         token = localStorage.getItem('token') || ""
         first_name = localStorage.getItem('first_name') || ""
@@ -14,7 +14,7 @@ const user = () => {
         email = localStorage.getItem('email') || ""
         permissions = localStorage.getItem('permissions')?.split(',') || []
     }
-    return { token, first_name, last_name, phone_number, email }
+    return { token, first_name, last_name, phone_number, email, permissions }
 }
 
 export default user

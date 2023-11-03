@@ -36,12 +36,15 @@ import Grid from '@mui/material/Grid';
 import { FETCH_USERS } from '../utils/queries';
 import { useQuery } from 'urql';
 import ActivityIndicator from '../components/activity-indicator';
+import user from '../lib/user-details';
 
 const drawerWidth = 240;
 
 export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
   const [search, setSearch] = React.useState(''); 
   const [res] = useQuery({query: FETCH_USERS, variables: {search} });
@@ -107,7 +110,7 @@ export default function Page() {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}

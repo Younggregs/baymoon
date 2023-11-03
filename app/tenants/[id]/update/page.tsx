@@ -43,6 +43,7 @@ import Checkbox from '@mui/material/Checkbox';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
 const thumbsContainer = {
@@ -81,6 +82,8 @@ export default function Page() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [status, setStatus] = React.useState('');
   const [category, setCategory] = React.useState('');
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
   const [todos, setTodos] = React.useState<{ name: string; label: string }[]>([{ name: "", label: "" }]); 
   
@@ -178,7 +181,7 @@ export default function Page() {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}

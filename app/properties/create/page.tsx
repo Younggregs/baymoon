@@ -39,12 +39,16 @@ import { CREATE_PROPERTY } from "../../utils/mutations";
 import { lga_list } from '@/app/lib/location/lga';
 import { state_list } from '@/app/lib/location/states';
 import ActivityIndicator from '../../components/activity-indicator';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
 
 export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
+  
   const [isLoading, setIsLoading] = React.useState(false)
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
@@ -136,7 +140,7 @@ export default function Page() {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}

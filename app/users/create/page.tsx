@@ -44,12 +44,16 @@ import Checkbox from '@mui/material/Checkbox';
 import { CREATE_USER } from '@/app/utils/mutations';
 import { useMutation } from "urql";
 import ActivityIndicator from '../../components/activity-indicator';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
 
 export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
+
   const [first_name, setFirstName] = React.useState('');
   const [last_name, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -64,12 +68,12 @@ export default function Page() {
     setIsLoading(true);
     // Set permissions based on state
     const p = [
-      state.dashboard ? 'dashboard' : null,
-      state.properties ? 'properties' : null,
-      state.tenants ? 'tenants' : null,
-      state.income ? 'income' : null,
-      state.expenses ? 'expenses' : null,
-      state.users ? 'users' : null,
+      state.dashboard ? 'Dashboard' : null,
+      state.properties ? 'Properties' : null,
+      state.tenants ? 'Tenants' : null,
+      state.income ? 'Income' : null,
+      state.expenses ? 'Expenses' : null,
+      state.users ? 'Users' : null,
     ]
     const permissions = p.filter((v) => v !== null)
     const data = {
@@ -170,7 +174,7 @@ export default function Page() {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}

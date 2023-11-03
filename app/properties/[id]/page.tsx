@@ -36,6 +36,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { PROPERTY_BY_ID, FETCH_UNITS } from '@/app/utils/queries';
 import { useQuery } from 'urql';
 import ActivityIndicator from '@/app/components/activity-indicator';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
 
@@ -51,6 +52,8 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
   const [res] = useQuery({query: PROPERTY_BY_ID, variables: {id: params?.id} });
   const { data, fetching, error } = res;
@@ -119,7 +122,7 @@ export default function Page(props: Props) {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}

@@ -7,7 +7,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -22,56 +21,27 @@ import CottageIcon from '@mui/icons-material/Cottage';
 import SellIcon from '@mui/icons-material/Sell';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import stylesMain from '../../../../page.module.css';
 import Button from '@mui/material/Button';
 import ProfileMenu from '../../../../components/navigation/profile-menu';
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { CREATE_UNIT } from '@/app/utils/mutations';
-import { useMutation } from "urql";
+import { useMutation, useQuery } from "urql";
 import Image from 'next/image'
 import ActivityIndicator from '@/app/components/activity-indicator';
+import { currencies, paymentPlan } from '@/app/lib/constants';
+import { FETCH_USERS } from '@/app/utils/queries';
+import user from '@/app/lib/user-details';
 
 const drawerWidth = 240;
-const thumbsContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16
-};
-
-const thumb = {
-  display: 'inline-flex',
-  borderRadius: 2,
-  border: '1px solid #eaeaea',
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: 'border-box'
-};
-
-const thumbInner = {
-  display: 'flex',
-  minWidth: 0,
-  overflow: 'hidden'
-};
-
-const img = {
-  display: 'block',
-  width: 'auto',
-  height: '100%'
-};
-
 interface Props {
   params?: any;
 }
@@ -81,9 +51,15 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
+
   const [isLoading, setIsLoading] = React.useState(false)
   const [published, setPublished] = React.useState(0);
   const [category, setCategory] = React.useState('');
+  const [currency, setCurrency] = React.useState('');
+  const [contacts, setContacts] = React.useState<string[]>([]);
+  const [payment_plan, setPaymentPlan] = React.useState('');
   const [type, setType] = React.useState('');
   const [name, setName] = React.useState('');
   const [price, setPrice] = React.useState(0);
@@ -97,7 +73,22 @@ export default function Page(props: Props) {
   const [furnishing, setFurnishing] = React.useState('')
   const [files, setFiles] = React.useState<{ preview: string }[]>([]);
 
+  const [res] = useQuery({query: FETCH_USERS, variables: {search: ''} });
+  const { data, fetching, error } = res;
+
   const [createUnitResult, createUnit] = useMutation(CREATE_UNIT);
+
+  const handleChange = (event: SelectChangeEvent<typeof contacts>) => {
+    const {
+      target: { value },
+    } = event;
+    setContacts(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
+  console.log('contacts: ', contacts)
 
   const submit = async () => {
     setIsLoading(true)
@@ -107,7 +98,10 @@ export default function Page(props: Props) {
         category,
         description,
         price,
+        currency,
+        payment_plan,
         quantity,
+        contacts,
         bathrooms,
         bedrooms,
         toilets,
@@ -241,7 +235,7 @@ export default function Page(props: Props) {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}
@@ -382,7 +376,7 @@ export default function Page(props: Props) {
                 component="div" 
                 sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
             >
-                Unit
+                Create Unit
             </Typography>
             <Divider style={{margin: '10px'}} />
 
@@ -398,7 +392,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Name(Title)
@@ -427,7 +422,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Price
@@ -450,6 +446,61 @@ export default function Page(props: Props) {
                     }}
                 />
             </Grid>
+
+            <Grid
+                container
+                spacing={2} 
+                style={{margin: '5px'}}
+                direction="column"
+                item 
+                xs={5}
+            >
+                <Typography fontWeight={'bold'}>
+                    Select Currency
+                </Typography>
+                <FormControl fullWidth style={{marginTop: '10px'}}>
+                    <InputLabel id="demo-simple-select-label">Currency</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={currency}
+                        label="Currency"
+                        onChange={(e) => setCurrency(e.target.value)}
+                    >
+                      {currencies.map((c, index)=> ( 
+                        <MenuItem key={index} value={c.value}>{c.label}</MenuItem>
+                      ))}
+                    </Select>
+                </FormControl>
+            </Grid> 
+
+            <Grid
+                container
+                spacing={2} 
+                style={{margin: '5px'}}
+                direction="column"
+                item 
+                xs={5}
+            >
+                <Typography fontWeight={'bold'}>
+                    Select Payment Plan
+                </Typography>
+                <FormControl fullWidth style={{marginTop: '10px'}}>
+                    <InputLabel id="demo-simple-select-label">Payment Plan</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={payment_plan}
+                        label="Payment Plan"
+                        onChange={(e) => setPaymentPlan(e.target.value)}
+                    >
+                      {paymentPlan.map((c, index)=> ( 
+                        <MenuItem key={index} value={c.value}>{c.label}</MenuItem>
+                      ))}
+                    </Select>
+                </FormControl>
+            </Grid> 
+
             <Grid 
                 container 
                 spacing={2} 
@@ -507,6 +558,34 @@ export default function Page(props: Props) {
                     </Select>
                 </FormControl>
             </Grid> 
+
+            <Grid 
+                container 
+                spacing={2} 
+                style={{margin: '5px'}}
+                direction="column"
+                item
+                xs={5}
+            >
+                <Typography fontWeight={'bold'}>
+                    Select Contact Persons
+                </Typography>
+                <FormControl fullWidth style={{marginTop: '10px'}}>
+                    <InputLabel id="demo-simple-select-label">Contact Persons</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={contacts}
+                        label="Contact Persons"
+                        multiple
+                        onChange={handleChange}
+                    >
+                      {data?.users?.edges?.map((user: any) => (
+                          <MenuItem key={user.node.id} value={user.node.id}>{user.node.firstName} {user.node.lastName}</MenuItem>
+                      ))}
+                    </Select>
+                </FormControl>
+            </Grid>
 
           </Grid>
           </Grid>
@@ -627,21 +706,21 @@ export default function Page(props: Props) {
                     Toilets
                 </Typography>
                 <input
-                    type="number"
-                    placeholder="e.g 4"
-                    onChange={(e) => setToilets(parseInt(e.target.value))}
-                    style={{
-                        width: '100%',
-                        height: '50px', 
-                        padding: '12px 20px',
-                        backgroundColor: '#fff',
-                        color: '#000',
-                        fontSize: '16px',
-                        outline: 'none',
-                        boxSizing: 'border-box',
-                        border: '1px solid #000',
-                        borderRadius: '5px',
-                    }}
+                  type="number"
+                  placeholder="e.g 4"
+                  onChange={(e) => setToilets(parseInt(e.target.value))}
+                  style={{
+                      width: '100%',
+                      height: '50px', 
+                      padding: '12px 20px',
+                      backgroundColor: '#fff',
+                      color: '#000',
+                      fontSize: '16px',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                      border: '1px solid #000',
+                      borderRadius: '5px',
+                  }}
                 />
           </Grid>
           <Grid 

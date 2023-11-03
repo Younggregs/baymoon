@@ -21,6 +21,9 @@ import SellIcon from '@mui/icons-material/Sell';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import stylesMain from './page.module.css';
 import Button from '@mui/material/Button';
@@ -31,15 +34,24 @@ import { PieChart, pieArcClasses } from '@mui/x-charts/PieChart';
 import { useQuery } from 'urql';
 import { FETCH_SUMMARY } from './utils/queries';
 import NameTitle from './components/users/name-title';
+import { currencies, currencySymbols } from './lib/constants';
+import MenuItem from '@mui/material/MenuItem';
+import capitalizeFirstLetter from './lib/format/capitalize-first-letter';
+import user from './lib/user-details';
 
 const drawerWidth = 240;
 
 export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [currency, setCurrency] = React.useState('naira');
 
-  const [res] = useQuery({query: FETCH_SUMMARY });
+  const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
+
+  const [res] = useQuery({query: FETCH_SUMMARY, variables: {currency} });
   const { data, fetching, error } = res;
+
+  console.log('currency', currency)
 
   const transactions = [
     { id: 0, value: data?.summary?.income, label: 'Income' },
@@ -111,7 +123,7 @@ export default function Page() {
           },
         }}
       >
-        {['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'].map((text, index) => (
+        {features.map((text, index) => (
           <ListItem style={{marginBottom: '15px'}} key={text} disablePadding>
             <ListItemButton 
               className = {stylesMain.listbutton}
@@ -146,6 +158,8 @@ export default function Page() {
       },
     },
   });
+
+  console.log('user', features)
 
   return (
     <main 
@@ -219,6 +233,42 @@ export default function Page() {
       <Box
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, color: '#000' }}
       >
+
+      <Grid
+        container
+        direction="column"
+        alignItems="flex-end"
+        justifyItems="flex-end"
+        width={'80vw'}
+        style={{margin: '10px'}}
+      >
+        <Grid
+          spacing={2} 
+          style={{margin: '5px'}}
+          direction="column"
+          container 
+          xs={6}
+          sm={3}
+        >
+          <Typography fontWeight={'bold'}>
+              Switch Currency
+          </Typography>
+          <FormControl fullWidth style={{marginTop: '10px'}}>
+              <InputLabel id="demo-simple-select-label">Currency</InputLabel>
+              <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={currency}
+                  label="Currency"
+                  onChange={(e) => setCurrency(e.target.value)}
+              >
+                {currencies.map((c, index)=> ( 
+                  <MenuItem key={index} value={c.value}>{c.label}</MenuItem>
+                ))}
+              </Select>
+          </FormControl>
+        </Grid> 
+        </Grid>
         
         {/* Dashboard */}
         <Grid
@@ -328,7 +378,7 @@ export default function Page() {
                 component="div" 
                 sx={style.value}
             >
-                ${data?.summary?.income}
+                {currencySymbols[currency.toUpperCase() as keyof typeof currencySymbols]}{data?.summary?.income}
             </Typography>
         </Grid>
 
@@ -351,7 +401,7 @@ export default function Page() {
               component="div" 
               sx={style.value}
           >
-              ${data?.summary?.expense}
+             {currencySymbols[currency.toUpperCase() as keyof typeof currencySymbols]}{data?.summary?.expense}
           </Typography>
         </Grid>
 
@@ -374,7 +424,7 @@ export default function Page() {
                 component="div" 
                 sx={style.value}
             >
-                ${data?.summary?.balance}
+                {currencySymbols[currency.toUpperCase() as keyof typeof currencySymbols]}{data?.summary?.balance}
             </Typography>
         </Grid>
 
