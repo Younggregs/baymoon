@@ -36,7 +36,6 @@ import { FETCH_SUMMARY } from './utils/queries';
 import NameTitle from './components/users/name-title';
 import { currencies, currencySymbols } from './lib/constants';
 import MenuItem from '@mui/material/MenuItem';
-import capitalizeFirstLetter from './lib/format/capitalize-first-letter';
 import user from './lib/user-details';
 
 const drawerWidth = 240;

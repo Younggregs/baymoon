@@ -45,14 +45,14 @@ const paymentPlan = [
 const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
 // dev
-// const url = "http://localhost:8000/graphql"
-// const uiUrl = "http://localhost:3000"
-// const baseUrl = "http://localhost:8000"
+const url = "http://localhost:8000/graphql"
+const uiUrl = "http://localhost:3000"
+const baseUrl = "http://localhost:8000"
 
 // prod
-const url = "https://api.baymoon.app/graphql"
-const uiUrl = "http://baymoon.app"
-const baseUrl = "https://api.baymoon.app"
+// const url = "https://api.baymoon.app/graphql"
+// const uiUrl = "http://baymoon.app"
+// const baseUrl = "https://api.baymoon.app"
 
 export {
     cardWidth,

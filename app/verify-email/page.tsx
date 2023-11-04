@@ -27,7 +27,7 @@ export default function VerifyEmail() {
   const submit = async () => {
     setIsLoading(true);
     const data = {
-      email,
+      email: email.toLowerCase(),
       type: "signup"
     };
     verifyEmail(data).then((result) => {

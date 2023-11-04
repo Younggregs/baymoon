@@ -49,6 +49,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import user from '@/app/lib/user-details';
+import NameTitle from '@/app/components/users/name-title';
 
 const drawerWidth = 240;
 
@@ -201,12 +202,7 @@ export default function Page() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography 
-            variant="h6" noWrap component="div" 
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }}}
-          >
-            Hello Retzam
-          </Typography>
+          <NameTitle />
           <Typography 
             variant="h6" noWrap component="div" 
             sx={{ flexGrow: 1, display: { sm: 'none' }}}

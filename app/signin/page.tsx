@@ -47,6 +47,7 @@ export default function Signup() {
     const first_name_ = first_name || data?.verifyEmailToken?.firstName
     const last_name_ = last_name || data?.verifyEmailToken?.lastName
     const phone_number_ = phone_number || data?.verifyEmailToken?.phoneNumber
+    const permissions = data?.verifyEmailToken?.permissions || ['*']
     const data_ = {
         first_name: first_name_,
         last_name: last_name_,
@@ -66,7 +67,7 @@ export default function Signup() {
         localStorage.setItem('last_name', last_name_)
         localStorage.setItem('phone_number', phone_number_)
         localStorage.setItem('email', email)
-        localStorage.setItem('permissions', data?.verifyEmailToken?.permissions)
+        localStorage.setItem('permissions', permissions)
         processLogin({ email, password})
       }
     });

@@ -44,6 +44,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { USER_BY_ID, DELETE_USER } from '@/app/utils/queries';
 import { useQuery } from 'urql';
 import user from '@/app/lib/user-details';
+import NameTitle from '@/app/components/users/name-title';
 
 const drawerWidth = 240;
 
@@ -215,12 +216,7 @@ export default function Page(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography 
-            variant="h6" noWrap component="div" 
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }}}
-          >
-            Hello Retzam
-          </Typography>
+          <NameTitle />
           <Typography 
             variant="h6" noWrap component="div" 
             sx={{ flexGrow: 1, display: { sm: 'none' }}}

@@ -46,6 +46,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { TENANT_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
 import user from '@/app/lib/user-details';
+import NameTitle from '@/app/components/users/name-title';
 
 const drawerWidth = 240;
 const thumbsContainer = {
@@ -226,12 +227,7 @@ export default function Page(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography 
-            variant="h6" noWrap component="div" 
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }}}
-          >
-            Hello Retzam
-          </Typography>
+          <NameTitle />
           <Typography 
             variant="h6" noWrap component="div" 
             sx={{ flexGrow: 1, display: { sm: 'none' }}}

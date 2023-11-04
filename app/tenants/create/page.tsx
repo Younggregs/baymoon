@@ -42,6 +42,7 @@ import { useMutation, useQuery } from 'urql';
 import { CREATE_TENANT } from '@/app/utils/mutations';
 import ActivityIndicator from '../../components/activity-indicator';
 import user from '@/app/lib/user-details';
+import NameTitle from '@/app/components/users/name-title';
 
 const drawerWidth = 240;
 
@@ -231,12 +232,7 @@ export default function Page() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography 
-            variant="h6" noWrap component="div" 
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }}}
-          >
-            Hello Retzam
-          </Typography>
+          <NameTitle />
           <Typography 
             variant="h6" noWrap component="div" 
             sx={{ flexGrow: 1, display: { sm: 'none' }}}
