@@ -34,6 +34,7 @@ import { useQuery } from 'urql';
 import { currencySymbols } from '@/app/lib/constants';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
+import formatDate from '@/app/lib/format/date';
 
 const drawerWidth = 240;
 
@@ -243,7 +244,7 @@ export default function Page(props: Props) {
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, color: '#000' }}
+        sx={{ flexGrow: 1, width: '100%', maxWidth: '100vw', color: '#000' }}
       >
         <Toolbar>
             <IconButton
@@ -265,7 +266,7 @@ export default function Page(props: Props) {
         <Grid 
             style={{
                 border: '1px solid #000',
-                width: '70vw',
+                width: '80vw',
                 minHeight: '80vh',
                 borderRadius: '10px',
                 backgroundColor: '#fff',
@@ -378,7 +379,30 @@ export default function Page(props: Props) {
                             component="div"
                             sx={styles.value}
                         >
-                            --
+                            {formatDate(new Date(data?.transactionById?.transactionDate))}
+                        </Typography>
+                    </Grid>
+                </Grid>
+                <Grid
+                    item
+                    xs={6}
+                    container
+                    direction={'column'}
+                >
+                    <Grid>
+                        <Typography
+                            variant="h6" 
+                            component="div" 
+                            sx={styles.label}
+                        >
+                            Date Created 
+                        </Typography>
+                        <Typography
+                            variant="h6" 
+                            component="div"
+                            sx={styles.value}
+                        >
+                            {formatDate(new Date(data?.transactionById?.createdAt))}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -402,6 +426,29 @@ export default function Page(props: Props) {
                             sx={styles.value}
                         >
                             {data?.transactionById?.paymentMethod}
+                        </Typography>
+                    </Grid>
+                </Grid>
+                <Grid
+                    item
+                    xs={6}
+                    container
+                    direction={'column'}
+                >
+                    <Grid>
+                        <Typography
+                            variant="h6" 
+                            component="div" 
+                            sx={styles.label}
+                        >
+                            Created By
+                        </Typography>
+                        <Typography
+                            variant="h6" 
+                            component="div"
+                            sx={styles.value}
+                        >
+                            {data?.transactionById?.user.firstName} {data?.transactionById?.user.lastName}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -438,6 +485,8 @@ export default function Page(props: Props) {
             container 
             spacing={2} 
             style={{marginTop: '15px'}}
+            alignItems={'center'}
+            justifyContent={'center'}
         >
             {/* Create User button */}
             <Button 

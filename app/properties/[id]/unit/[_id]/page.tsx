@@ -39,6 +39,7 @@ import { useQuery } from 'urql';
 import { currencySymbols } from '@/app/lib/constants';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
+import formatDate from '@/app/lib/format/date';
 
 const drawerWidth = 240;
 interface Props {
@@ -466,6 +467,36 @@ export default function Page(props: Props) {
                   style={style.value}
                 >
                   {data?.unitById?.furnishing}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+              >
+                <Typography
+                  style={style.label}
+                >
+                  Created By
+                </Typography>
+                <Typography
+                  style={style.value}
+                >
+                  {data?.unitById?.user?.firstName} {data?.unitById?.user?.lastName}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+              >
+                <Typography
+                  style={style.label}
+                >
+                  Date Created
+                </Typography>
+                <Typography
+                  style={style.value}
+                >
+                  {formatDate(new Date(data?.unitById?.createdAt))}
                 </Typography>
               </Grid>
 

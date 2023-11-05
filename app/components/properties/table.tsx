@@ -28,6 +28,7 @@ interface Data {
   location: string;
   units: string;
   tenants: string;
+  createdBy: string;
   node?: {
     id: string;
     name: string;
@@ -37,39 +38,12 @@ interface Data {
     };
     units: string;
     tenants: string;
-  
+    createdBy: {
+      firstName: string;
+      lastName: string;
+    }
   }
 }
-
-function createData(
-  name: string,
-  location: string,
-  units: string,
-  tenants: string,
-): Data {
-  return {
-    name,
-    location,
-    units,
-    tenants,
-  };
-}
-
-const rows = [
-  createData('120000', 'Cupcake', 'Retzam', '10/10/2020'),
-  createData('120000', 'Donut', 'Retzam',  '10/10/2020'),
-  createData('120000', 'Eclair', 'Retzam', '10/10/2020'),
-  createData('120000', 'Frozen yoghurt', 'Retzam', '10/10/2020'),
-  createData('120000', 'Gingerbread', 'Retzam', '10/10/2020'),
-  createData('120000', 'Honeycomb', 'Retzam', '10/10/2020'),
-  createData('120000', 'Ice cream sandwich', 'Retzam', '10/10/2020'),
-  createData('120000', 'Jelly Bean', 'Retzam', '10/10/2020'),
-  createData('120000', 'KitKat', 'Retzam', '10/10/2020'),
-  createData('120000', 'Lollipop', 'Retzam', '10/10/2020'),
-  createData('120000', 'Marshmallow', 'Retzam', '10/10/2020'),
-  createData('120000', 'Nougat', 'Retzam', '10/10/2020'),
-  createData('120000', 'Oreo', 'Retzam', '10/10/2020'),
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -142,6 +116,12 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Tenants',
+  },
+  {
+    id: 'createdBy',
+    numeric: false,
+    disablePadding: false,
+    label: 'Created By',
   }
 ];
 
@@ -352,11 +332,11 @@ export default function EnhancedTable({data}: {data: any[]}) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={data.length}
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const r = (row?.node as { id: string, name: string, location: { lga: string, state: string }, units: string, tenants: string})
+                const r = (row?.node as { id: string, name: string, location: { lga: string, state: string }, units: string, user: {firstName: string, lastName: string}, tenants: string})
                 const isItemSelected = isSelected(r.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -397,6 +377,9 @@ export default function EnhancedTable({data}: {data: any[]}) {
                     <TableCell align="left">{r.location?.lga}, {r.location?.state}</TableCell>
                     <TableCell align="left">{r.units}</TableCell>
                     <TableCell align="left">{r.tenants}</TableCell>
+                    <TableCell align="left">
+                      {r.user.firstName} {r.user.lastName}
+                    </TableCell>
                     <TableCell align="left">
                         <IconButton>
                             <Link href={`/properties/${r.id}`}>

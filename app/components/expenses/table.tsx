@@ -22,12 +22,13 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import { visuallyHidden } from '@mui/utils';
 import Link from 'next/link';
+import { currencySymbols } from '@/app/lib/constants';
 
 interface Data {
   amount: string;
   property: string;
   title: string;
-  date: string;
+  createdBy: string;
   node?: {
     id: string;
     title: string;
@@ -35,22 +36,12 @@ interface Data {
     date: string;
     property: {
       name: string;
+    },
+    createdBy: {
+      firstName: string;
+      lastName: string;
     }
   }
-}
-
-function createData(
-    amount: string,
-    property: string,
-    title: string,
-    date: string,
-): Data {
-  return {
-    amount,
-    property,
-    title,
-    date,
-  };
 }
 
 
@@ -121,10 +112,10 @@ const headCells: readonly HeadCell[] = [
     label: 'Property',
   },
   {
-    id: 'date',
+    id: 'createdBy',
     numeric: false,
     disablePadding: false,
-    label: 'Date',
+    label: 'Created By',
   }
 ];
 interface EnhancedTableProps {
@@ -320,11 +311,11 @@ export default function EnhancedTable({data}: {data: any[]}) {
 
   return (
     <Box sx={{ width: '100%', color: '#000' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+      <Paper sx={{ width: '100%', mb: 2}}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ width: '80vw' }}
+            sx={{ width: '80vw'}}
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
           >
@@ -338,7 +329,7 @@ export default function EnhancedTable({data}: {data: any[]}) {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const r = (row?.node as { title: string, id: string, date: string, amount: number, property: { name: string } })
+                const r = (row?.node as { title: string, id: string, user: {firstName: string, lastName: string}, currency: string, amount: number, property: { name: string } })
                 const isItemSelected = isSelected(r.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -376,9 +367,13 @@ export default function EnhancedTable({data}: {data: any[]}) {
                     >
                       {r.title}
                     </TableCell>
-                    <TableCell align="left">{r.amount}</TableCell>
+                    <TableCell align="left">
+                      {currencySymbols[r.currency.toUpperCase() as keyof typeof currencySymbols]}{r.amount}
+                    </TableCell>
                     <TableCell align="left">{r.property.name}</TableCell>
-                    <TableCell align="left">{r.date}</TableCell>
+                    <TableCell align="left">
+                      {r.user.firstName} {r.user.lastName}
+                    </TableCell>
                     <TableCell align="left">
                         <IconButton>
                             <Link href={`/expenses/${r.id}`}>

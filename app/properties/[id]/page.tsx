@@ -38,6 +38,7 @@ import { useQuery } from 'urql';
 import ActivityIndicator from '@/app/components/activity-indicator';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
+import formatDate from '@/app/lib/format/date';
 
 const drawerWidth = 240;
 
@@ -230,7 +231,7 @@ export default function Page(props: Props) {
 
       <Box
         component="main"
-        sx={{color: '#000'}}
+        sx={{ overflowX: 'auto', flexGrow: 1, width: '100%', maxWidth: '100vw', color: '#000' }}
       >
         <Toolbar>
           <IconButton
@@ -362,6 +363,54 @@ export default function Page(props: Props) {
 
         <Grid
           item
+          xs={6}
+          sm={3}
+          container
+          direction={'column'}
+        >
+            <Grid>
+                <Typography
+                    component="div" 
+                    sx={style.label}
+                >
+                 Created By
+                </Typography>
+                <Typography
+                    component="div" 
+                    sx={style.value}
+                >
+                  {data?.propertyById?.user.firstName} {data?.propertyById?.user.lastName}
+                </Typography>
+                <Divider style={{margin: '10px'}} />
+            </Grid>
+        </Grid>
+
+        <Grid
+          item
+          xs={6}
+          sm={3}
+          container
+          direction={'column'}
+        >
+            <Grid>
+                <Typography
+                    component="div" 
+                    sx={style.label}
+                >
+                  Date Created
+                </Typography>
+                <Typography
+                    component="div" 
+                    sx={style.value}
+                >
+                  {formatDate(new Date(data?.propertyById?.createdAt))}
+                </Typography>
+                <Divider style={{margin: '10px'}} />
+            </Grid>
+        </Grid>
+
+        <Grid
+          item
           xs={12}
           container
           direction={'column'}
@@ -465,7 +514,7 @@ export default function Page(props: Props) {
 
 const style = {
   board: {
-    width: '80vw',
+    width: '100%',
     borderRadius: '10px',
     minHeight: '200px',
     marginBottom: '20px',

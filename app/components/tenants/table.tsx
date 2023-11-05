@@ -28,27 +28,18 @@ interface Data {
   last_name: string;
   property: string;
   unit: string;
+  createdBy: string;
   node?: {
     id: string;
     firstName: string;
     lastName: string;
     property: string;
     unit: string;
+    createdBy: {
+      firstName: string;
+      lastName: string;
+    }
   }
-}
-
-function createData(
-  first_name: string,
-  last_name: string,
-  property: string,
-  unit: string,
-): Data {
-  return {
-    first_name,
-    last_name,
-    property,
-    unit,
-  };
 }
 
 
@@ -123,6 +114,12 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Unit',
+  },
+  {
+    id: 'createdBy',
+    numeric: false,
+    disablePadding: false,
+    label: 'Created By',
   },
 ];
 
@@ -337,7 +334,7 @@ export default function EnhancedTable({data}: {data: any[]}) {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const r = (row?.node as { firstName: string, id: string, lastName: string, unit: string, property: string })
+                const r = (row?.node as { firstName: string, id: string, lastName: string, unit: string, property: string, createdBy: {firstName: string, lastName: string} })
                 const isItemSelected = isSelected(r.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -378,6 +375,9 @@ export default function EnhancedTable({data}: {data: any[]}) {
                     <TableCell align="left">{r.lastName}</TableCell>
                     <TableCell align="left">{r.property}</TableCell>
                     <TableCell align="left">{r.unit}</TableCell>
+                    <TableCell align="left">
+                      {r.createdBy.firstName} {r.createdBy.lastName}
+                    </TableCell>
                     <TableCell align="left">
                         <IconButton>
                             <Link href={`/tenants/${r.id}`}>

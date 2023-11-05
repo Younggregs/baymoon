@@ -218,6 +218,7 @@ export default function Page() {
 
       <Box
         component="main"
+        sx={{ overflowX: 'auto', flexGrow: 1, width: '100%', maxWidth: '100vw' }}
       >
           <Toolbar>
             {/* Search bar */}

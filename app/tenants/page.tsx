@@ -217,7 +217,7 @@ export default function Page() {
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, color: '#000' }}
+        sx={{ overflowX: 'auto', flexGrow: 1, width: '100%', maxWidth: '100vw' }}
       >
         <Toolbar>
           {/* Search bar */}

@@ -27,7 +27,11 @@ const FETCH_USERS = gql`
             lastName,
             email,
             phoneNumber,
-            title
+            title,
+            createdBy{
+              firstName,
+              lastName
+            }
         }
       }
     }
@@ -101,7 +105,11 @@ const FETCH_PROPERTIES = gql`
               lga
             },
             tenants,
-            units
+            units,
+            user{
+              firstName,
+              lastName
+            }
         }
         }
     }
@@ -119,7 +127,12 @@ const PROPERTY_BY_ID = gql`
         lga
       },
       tenants,
-      units
+      units,
+      user{
+        firstName,
+        lastName
+      },
+      createdAt
     }
   }
 `;
@@ -155,6 +168,10 @@ const FETCH_UNITS = gql`
             published,
             property{
               id
+            },
+            user{
+              firstName,
+              lastName
             }
         }
         }
@@ -191,7 +208,12 @@ const UNIT_BY_ID = gql`
       type,
       furnishing,
       category, 
-      images
+      images,
+      user{
+        firstName,
+        lastName
+      },
+      createdAt
     }
   }
 `;
@@ -221,7 +243,11 @@ const FETCH_TENANTS = gql`
             firstName,
             lastName,
             property,
-            unit
+            unit,
+            createdBy{
+              firstName,
+              lastName
+            }
         }
         }
     }
@@ -268,8 +294,13 @@ const FETCH_TRANSACTIONS = gql`
             title,
             description,
             amount,
+            currency,
             property {
               name
+            },
+            user{
+              firstName,
+              lastName
             }
         }
         }
@@ -289,6 +320,12 @@ const TRANSACTION_BY_ID = gql`
       paymentMethod,
       property {
         name
+      },
+      createdAt
+      transactionDate,
+      user{
+        firstName,
+        lastName
       }
     }
 }

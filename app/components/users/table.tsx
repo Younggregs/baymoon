@@ -32,41 +32,18 @@ interface Data {
   firstname: string;
   lastname: string;
   title: string;
+  createdBy: string;
   node?: {
     id: string;
     firstName: string;
     lastName: string;
     title: string;
+    createdBy: {
+      firstName: string;
+      lastName: string;
+    }
   }
 }
-
-function createData(
-    firstname: string,
-    lastname: string,
-    title: string,
-): Data {
-  return {
-    firstname,
-    lastname,
-    title,
-  };
-}
-
-const rows = [
-  createData('Cupcake', 'Retzam', 'Accountant'),
-  createData('Donut', 'Retzam', 'Accountant'),
-  createData('Eclair', 'Retzam', 'Accountant'),
-  createData('Frozen yoghurt', 'Retzam', 'Accountant'),
-  createData('Gingerbread', 'Retzam', 'Accountant'),
-  createData('Honeycomb', 'Retzam', 'Accountant'),
-  createData('Ice cream sandwich', 'Retzam', 'Accountant'),
-  createData('Jelly Bean', 'Retzam', 'Accountant'),
-  createData('KitKat', 'Retzam', 'Accountant'),
-  createData('Lollipop', 'Retzam', 'Accountant'),
-  createData('Marshmallow', 'Retzam', 'Accountant'),
-  createData('Nougat', 'Retzam', 'Accountant'),
-  createData('Oreo', 'Retzam', 'Accountant'),
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -133,6 +110,12 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: 'Title',
+  },
+  {
+    id: 'createdBy',
+    numeric: false,
+    disablePadding: false,
+    label: 'Created By',
   }
 ];
 
@@ -316,7 +299,7 @@ export default function EnhancedTable({data}: {data: any[]}) {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
@@ -347,7 +330,7 @@ export default function EnhancedTable({data}: {data: any[]}) {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                 const r = (row?.node as { firstName: string, id: string, lastName: string, title: string })
+                 const r = (row?.node as { firstName: string, id: string, lastName: string, title: string, createdBy: {firstName: string, lastName: string} })
                 const isItemSelected = isSelected(r.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -387,6 +370,9 @@ export default function EnhancedTable({data}: {data: any[]}) {
                     </TableCell>
                     <TableCell align="right">{r.lastName}</TableCell>
                     <TableCell align="right">{r.title}</TableCell>
+                    <TableCell align="left">
+                      {r.createdBy?.firstName} {r.createdBy?.lastName}
+                    </TableCell>
                     <TableCell align="right">
                         <IconButton>
                             <Link href={`/users/${r.id}`}>

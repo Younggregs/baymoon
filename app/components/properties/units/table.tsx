@@ -27,6 +27,7 @@ interface Data {
   name: string;
   quantity: string;
   status: string;
+  createdBy: string;
   node?: {
     id: string;
     name: string;
@@ -34,37 +35,13 @@ interface Data {
     published: boolean;
     property: {
       id: string;
+    },
+    createdBy: {
+      firstName: string;
+      lastName: string;
     }
   }
 }
-
-function createData(
-  name: string,
-  quantity: string,
-  status: string,
-): Data {
-  return {
-    name,
-    quantity,
-    status,
-  };
-}
-
-const rows = [
-  createData('Cupcake', '7', 'Private'),
-  createData('Donut', '5',   'Public'),
-  createData('Eclair', '5',  'Public'),
-  createData('Frozen yoghurt', '4',  'Public' ),
-  createData('Gingerbread', '1', 'Public'),
-  createData('Honeycomb', '7',  'Private'),
-  createData('Ice cream sandwich', '6',  'Private'),
-  createData('Jelly Bean', '8', 'Private'),
-  createData('Retzam', '3', 'Private'),
-  createData('Lollipop', '2', 'Public'),
-  createData('Marshmallow', '15', 'Public'),
-  createData('Nougat', '12', 'Public'),
-  createData('Oreo', '5', 'Public'),
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -131,6 +108,12 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Public Listing',
+  },
+  {
+    id: 'createdBy',
+    numeric: false,
+    disablePadding: false,
+    label: 'Created By',
   }
 ];
 
@@ -345,7 +328,7 @@ export default function EnhancedTable({data}: {data: any[]}) {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const r = (row?.node as { id: string, name: string, quantity: string, published: boolean, property: { id: string }})
+                const r = (row?.node as { id: string, name: string, user: {firstName: string, lastName: string}, quantity: string, published: boolean, property: { id: string }})
                 const isItemSelected = isSelected(r.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -384,7 +367,12 @@ export default function EnhancedTable({data}: {data: any[]}) {
                       {r.name}
                     </TableCell>
                     <TableCell align="left">{r.quantity}</TableCell>
-                    <TableCell align="left">{r.published ? 'Published': "Private"}</TableCell>
+                    <TableCell align="left">
+                      {r.published ? 'Published': "Private"}
+                    </TableCell>
+                    <TableCell align="left">
+                      {r.user.firstName} {r.user.lastName}
+                    </TableCell>
                     <TableCell align="left">
                         <IconButton>
                             <Link href={`/properties/${r.property.id}/unit/${r.id}`}>
