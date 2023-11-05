@@ -449,7 +449,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item 
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Select Currency
@@ -476,7 +477,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item 
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Select Payment Plan
@@ -503,7 +505,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Quantity
@@ -534,7 +537,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Select Category
@@ -561,7 +565,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Select Contact Persons
@@ -638,7 +643,8 @@ export default function Page(props: Props) {
               style={{margin: '5px'}}
               direction="column"
               item
-              xs={5}
+              xs={12}
+              sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Bedrooms
@@ -667,7 +673,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Bathrooms
@@ -696,7 +703,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Toilets
@@ -725,7 +733,8 @@ export default function Page(props: Props) {
             style={{margin: '5px'}}
             direction="column"
             item
-            xs={5}
+            xs={12}
+            sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Select Type
@@ -751,7 +760,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Parking Space
@@ -780,7 +790,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Select Furnishing
@@ -836,7 +847,8 @@ export default function Page(props: Props) {
               style={{margin: '5px'}}
               direction="column"
               item
-              xs={5}
+              xs={12}
+              sm={5}
           >
               <Typography fontWeight={'bold'}>
                   Publish this unit to public listing

@@ -322,7 +322,8 @@ export default function Page() {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     First Name
@@ -351,7 +352,8 @@ export default function Page() {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                   Last Name
@@ -380,7 +382,8 @@ export default function Page() {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Email Address
@@ -411,7 +414,8 @@ export default function Page() {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Phone Number
@@ -442,7 +446,8 @@ export default function Page() {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Select Property
@@ -469,7 +474,8 @@ export default function Page() {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Select Unit
@@ -503,7 +509,7 @@ export default function Page() {
             </Typography>
             <Divider style={{margin: '10px'}} />
 
-            <Grid 
+            {/* <Grid 
                 container
                 direction={'row'}
                 alignItems={'center'}
@@ -514,7 +520,8 @@ export default function Page() {
                   style={{margin: '5px'}}
                   direction="column"
                   item
-                  xs={4}
+                  xs={12}
+                  sm={4}
                   > 
                   <Typography fontWeight={'bold'} style={{marginBottom: '5px'}}>
                         Field Name
@@ -527,7 +534,8 @@ export default function Page() {
                   style={{margin: '5px'}}
                   direction="column"
                   item
-                  xs={4}
+                  xs={12}
+                  sm={4}
                   > 
                   <Typography fontWeight={'bold'} style={{marginBottom: '5px'}}>
                         Field Type
@@ -546,14 +554,28 @@ export default function Page() {
                         Action
                     </Typography>
               </Grid>
-            </Grid>
-            
+            </Grid> */}
 
-            {todos.map((todo, index) => ( 
-              <Grid 
-                key={index}
-                container
-                direction={'row'}
+            <Grid 
+              container
+              direction={'row'}
+              alignItems={'center'}
+            > 
+              <Typography 
+                style={{marginBottom: '10px', marginTop: '20px', fontStyle: 'italic'}}
+                variant="body2"
+              >
+                Add fields to request more information from the tenant.
+                This requested fields would be sent to the tenant via email to fill. The filled information would be stored in the tenant&rsquo;s profile.
+              </Typography>
+            </Grid>
+                  
+
+                {todos.map((todo, index) => ( 
+                  <Grid 
+                    key={index}
+                    container
+                    direction={'row'}
                 alignItems={'center'}
               > 
                 <Grid 
@@ -562,7 +584,8 @@ export default function Page() {
                   style={{margin: '5px'}}
                   direction="column"
                   item
-                  xs={4}
+                  xs={12}
+                  sm={4}
                   key={index}
                   >
                     <input 
@@ -593,7 +616,8 @@ export default function Page() {
                     style={{margin: '5px'}}
                     direction="column"
                     item
-                    xs={4}
+                    xs={12}
+                    sm={4}
                 >
                     <FormControl fullWidth style={{marginTop: '10px'}}>
                         <InputLabel id="demo-simple-select-label">Field Type</InputLabel>
@@ -608,7 +632,6 @@ export default function Page() {
                             <MenuItem value={'text'}>Text</MenuItem>
                             <MenuItem value={'number'}>Number</MenuItem>
                             <MenuItem value={'boolean'}>Yes/No</MenuItem>
-                            <MenuItem value={'image'}>Image</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
@@ -617,8 +640,10 @@ export default function Page() {
                     spacing={2} 
                     style={{margin: '5px'}}
                     direction="column"
+                    alignItems={'flex-end'}
                     item
-                    xs={1}
+                    xs={12}
+                    sm={4}
                 >
                   <Button 
                     variant="outlined" 
