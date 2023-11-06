@@ -121,6 +121,20 @@ const CREATE_TENANT = gql`
   }
  }
 `;
+
+const UPDATE_TENANT = gql`
+     mutation updateTenant($id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString) {
+  updateTenant(id: $id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info) {
+    tenant {
+        id,
+    },
+    success,
+    errors {
+        message
+    }
+  }
+ }
+`;
 {/* End of Tenants Queries */}
 
 {/* Transactions Queries */}
@@ -147,5 +161,6 @@ export {
     CREATE_PROPERTY,
     CREATE_UNIT,
     CREATE_TENANT,
-    CREATE_TRANSACTION
+    CREATE_TRANSACTION,
+    UPDATE_TENANT
 };

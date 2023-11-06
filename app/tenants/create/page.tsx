@@ -59,7 +59,7 @@ export default function Page() {
   const [last_name, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [phone_number, setPhoneNumber] = React.useState('');
-  const [todos, setTodos] = React.useState([{ name: "", type: "" }]); 
+  const [todos, setTodos] = React.useState([{ name: "", type: "", value: "" }]); 
 
   const [res] = useQuery({query: FETCH_PROPERTIES, variables: {search: ""} });
   const { data: properties, fetching, error } = res;
@@ -99,7 +99,7 @@ export default function Page() {
   }; 
   
   const handleAddTodo = () => { 
-    setTodos([...todos, { name: "", type: "" }]); 
+    setTodos([...todos, { name: "", type: "", value: "" }]); 
   }; 
   
   const handleDeleteTodo = (i: number) => { 
@@ -112,7 +112,6 @@ export default function Page() {
     setMobileOpen(!mobileOpen);
   };
   
-  const [files, setFiles] = React.useState<{ preview: string }[]>([]);
 
   const getIcon = (key: string) => {
     switch (key) {

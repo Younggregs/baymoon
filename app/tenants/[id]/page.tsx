@@ -47,6 +47,7 @@ import { TENANT_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
+import formatDate from '@/app/lib/format/date';
 
 const drawerWidth = 240;
 const thumbsContainer = {
@@ -81,10 +82,6 @@ const img = {
 };
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   params?: any;
 }
 
@@ -317,7 +314,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     First Name
@@ -332,7 +330,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                   Last Name
@@ -347,7 +346,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Email Address
@@ -363,7 +363,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Phone Number
@@ -379,7 +380,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Property
@@ -395,7 +397,8 @@ export default function Page(props: Props) {
                 style={{margin: '5px'}}
                 direction="column"
                 item
-                xs={5}
+                xs={12}
+                sm={5}
             >
                 <Typography fontWeight={'bold'}>
                     Unit
@@ -404,19 +407,76 @@ export default function Page(props: Props) {
                     {data?.tenantById?.unit}
                 </Typography>
             </Grid>
-
-          </Grid>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Typography 
-                variant="h6" 
-                component="div" 
-                sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+            <Grid 
+                container 
+                spacing={2} 
+                style={{margin: '5px'}}
+                direction="column"
+                item
+                xs={12}
+                sm={5}
             >
-              More Details
-            </Typography>
-            <Divider style={{margin: '10px'}} />
+                <Typography fontWeight={'bold'}>
+                    Created By
+                </Typography>
+                <Typography>
+                    {data?.tenantById?.createdBy?.firstName} {data?.tenantById?.createdBy?.lastName}
+                </Typography>
+            </Grid>
+
+            <Grid 
+                container 
+                spacing={2} 
+                style={{margin: '5px'}}
+                direction="column"
+                item
+                xs={12}
+                sm={5}
+            >
+                <Typography fontWeight={'bold'}>
+                    Date Created
+                </Typography>
+                <Typography>
+                    {formatDate(new Date(data?.tenantById?.createdAt))}
+                </Typography>
+            </Grid>
+          </Grid>
+          </Grid>
+
+          <Grid 
+            container
+            alignItems={'center'}
+            justifyContent={'center'}
+          >
+            <Grid item xs={12}>
+              <Typography 
+                  variant="h6" 
+                  component="div" 
+                  sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+              >
+                More Details
+              </Typography>
+              <Divider style={{margin: '10px'}} />
+            </Grid>
+
+            {data?.tenantById?.moreInfo && JSON.parse(data?.tenantById?.moreInfo).map((item: any, index: number) => (
+                <Grid 
+                  container 
+                  spacing={2} 
+                  style={{margin: '5px', color: '#000'}}
+                  direction="column"
+                  xs={12}
+                  sm={5}
+                  key={index}
+                >
+                  <Typography fontWeight={'bold'}>
+                    {item?.name}
+                  </Typography>
+                  <Typography>
+                    {item?.value || 'Pending'}
+                  </Typography>
+                </Grid>
+            ))}
 
           
           <Grid

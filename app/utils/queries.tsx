@@ -264,7 +264,14 @@ const TENANT_BY_ID = gql`
       email,
       phoneNumber,
       property,
-      unit
+      unit, 
+      moreInfo,
+      landlord,
+      createdBy{ 
+        firstName,
+        lastName
+      },
+      createdAt
     }
   }
 `;
