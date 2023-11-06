@@ -48,7 +48,8 @@ const VERIFY_EMAIL_TOKEN = gql`
         lastName,
         email,
         phoneNumber,
-        permissions
+        permissions,
+        landlord
     }
   }
 `;

@@ -52,6 +52,26 @@ const CREATE_USER = gql`
   }
  }
 `;
+
+const UPDATE_USER = gql`
+    mutation UpdateUser($first_name: String!, $last_name: String!, $phone_number: String,  $file: Upload) {
+  updateUser(firstName: $first_name, lastName: $last_name, phoneNumber: $phone_number, file: $file) {
+    user {
+        id,
+        firstName,
+        lastName,
+        phoneNumber,
+        profilePicture,
+        title,
+    },
+    success,
+    errors {
+        message
+    }
+  }
+ }
+`;
+
 {/* End of user queries */}
 
 {/* Property Queries */}
@@ -123,6 +143,7 @@ export {
     VERIFY_TOKEN,
     VERIFY_EMAIL,
     CREATE_USER,
+    UPDATE_USER,
     CREATE_PROPERTY,
     CREATE_UNIT,
     CREATE_TENANT,

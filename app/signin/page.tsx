@@ -48,6 +48,9 @@ export default function Signup() {
     const last_name_ = last_name || data?.verifyEmailToken?.lastName
     const phone_number_ = phone_number || data?.verifyEmailToken?.phoneNumber
     const permissions = data?.verifyEmailToken?.permissions || ['*']
+    const landlord = data?.verifyEmailToken?.landlord || first_name_ + ' ' + last_name_
+    const profile_picture = data?.verifyEmailToken?.profilePicture || ''
+    const title = data?.verifyEmailToken?.title || ''
     const data_ = {
         first_name: first_name_,
         last_name: last_name_,
@@ -68,6 +71,9 @@ export default function Signup() {
         localStorage.setItem('phone_number', phone_number_)
         localStorage.setItem('email', email)
         localStorage.setItem('permissions', permissions)
+        localStorage.setItem('landlord', landlord)
+        localStorage.setItem('profile_picture', profile_picture)
+        localStorage.setItem('title', title)
         processLogin({ email, password})
       }
     });
