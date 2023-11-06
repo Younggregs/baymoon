@@ -83,11 +83,11 @@ export default function Profiel() {
                         container
                         style={{width: '200px', height: '200px'}}
                     >
-                        {!file.preview && !user().profile_picture && (
+                        {!file?.preview && !user().profile_picture && (
                             <ContactPageIcon style={{margin: 'auto', fontSize: 200}}/>
                         )}
 
-                        {!file.preview && user().profile_picture && (
+                        {!file?.preview && user().profile_picture && (
                             <Image 
                                 src={user().profile_picture} 
                                 style={{backgroundSize: 'cover', borderRadius: '20px'}}
@@ -97,7 +97,7 @@ export default function Profiel() {
                             />
                         )}
 
-                        {file.preview && (
+                        {file?.preview && (
                             <Image 
                                 src={file.preview} 
                                 style={{backgroundSize: 'cover', borderRadius: '20px'}}
