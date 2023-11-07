@@ -279,8 +279,8 @@ export default function Page(props: Props) {
 
         <Grid
           item
-          xs={6}
-          sm={3}
+          xs={12}
+          sm={4}
           container
           direction={'column'}
         >
@@ -303,8 +303,8 @@ export default function Page(props: Props) {
 
         <Grid
           item
-          xs={6}
-          sm={3}
+          xs={12}
+          sm={4}
           container
           direction={'column'}
         >
@@ -327,8 +327,8 @@ export default function Page(props: Props) {
 
         <Grid
           item
-          xs={6}
-          sm={3}
+          xs={12}
+          sm={4}
           container
           direction={'column'}
         >
@@ -351,8 +351,8 @@ export default function Page(props: Props) {
 
         <Grid
           item
-          xs={6}
-          sm={3}
+          xs={12}
+          sm={4}
           container
           direction={'column'}
         >
@@ -375,8 +375,8 @@ export default function Page(props: Props) {
 
         <Grid
           item
-          xs={6}
-          sm={3}
+          xs={12}
+          sm={4}
           container
           direction={'column'}
         >
@@ -399,8 +399,8 @@ export default function Page(props: Props) {
 
         <Grid
           item
-          xs={6}
-          sm={3}
+          xs={12}
+          sm={4}
           container
           direction={'column'}
         >
@@ -480,7 +480,7 @@ export default function Page(props: Props) {
                       outline: 'none',
                     }}
                 />
-                <IconButton>
+                <IconButton sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }}}>
                     <SearchIcon />
                 </IconButton>
             </Grid>

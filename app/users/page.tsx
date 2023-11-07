@@ -255,7 +255,7 @@ export default function Page() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-                <IconButton>
+                <IconButton sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }}}>
                     <SearchIcon />
                 </IconButton>
             </Grid>

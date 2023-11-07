@@ -253,7 +253,7 @@ export default function Page() {
                         outline: 'none',
                     }}
                 />
-                <IconButton>
+                <IconButton sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }}}>
                     <SearchIcon />
                 </IconButton>
             </Grid>

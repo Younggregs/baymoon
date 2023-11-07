@@ -37,6 +37,7 @@ import NameTitle from './components/users/name-title';
 import { currencies, currencySymbols } from './lib/constants';
 import MenuItem from '@mui/material/MenuItem';
 import user from './lib/user-details';
+import ActivityIndicator from './components/activity-indicator';
 
 const drawerWidth = 240;
 
@@ -225,6 +226,7 @@ export default function Page() {
         </Drawer>
       </Box>
 
+      {fetching ? <ActivityIndicator /> : (       
       <Box
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, color: '#000' }}
       >
@@ -563,6 +565,7 @@ export default function Page() {
         </Grid>
         
       </Box>
+      )}
 
     </Box>
     </ThemeProvider>
