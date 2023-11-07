@@ -64,11 +64,9 @@ export default function Page(props: Props) {
       phone_number,
       more_info: JSON.stringify(todos)
     }
-    console.log('data', data)
     updateTenant(data).then((result) => {
       setIsLoading(false)
       if (result.data?.updateTenant?.success) {
-        console.log('result', result)
         setSuccess(result.data?.updateTenant?.success)
       }
       else{
@@ -84,7 +82,6 @@ export default function Page(props: Props) {
     const newTodos = [...todos];
     newTodos[i][field] = e.target.value as never; 
     setTodos(newTodos);
-    console.log('todos', todos)
   }; 
   
   const handleDeleteTodo = (i: number) => { 
@@ -362,15 +359,15 @@ export default function Page(props: Props) {
             item
             xs={10}
           >
-                {success ? (
-                    <Typography style={{color: 'green'}}>
-                        Submitted Successfully
-                    </Typography>
-                ) : (
-                    <Typography style={{color: 'red'}}>
-                        {errorMessage}
-                    </Typography>
-                )}
+            {success ? (
+                <Typography style={{color: 'green'}}>
+                    Submitted Successfully
+                </Typography>
+            ) : (
+                <Typography style={{color: 'red'}}>
+                    {errorMessage}
+                </Typography>
+            )}
           {isLoading ? <ActivityIndicator /> : 
           (
             <Button 

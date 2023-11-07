@@ -33,7 +33,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Table from '../../components/properties/units/table';
 import Grid from '@mui/material/Grid';
 import SearchIcon from '@mui/icons-material/Search';
-import { PROPERTY_BY_ID, FETCH_UNITS } from '@/app/utils/queries';
+import { PROPERTY_BY_ID, FETCH_UNITS, DELETE_PROPERTY } from '@/app/utils/queries';
 import { useQuery } from 'urql';
 import ActivityIndicator from '@/app/components/activity-indicator';
 import user from '@/app/lib/user-details';
@@ -54,6 +54,7 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
@@ -63,6 +64,16 @@ export default function Page(props: Props) {
   const [search, setSearch] = React.useState(''); 
   const [res2] = useQuery({query: FETCH_UNITS, variables: {search, id: params?.id} });
   const { data: data2, fetching: fetching2, error: error2 } = res2;
+
+  const [res3, executeDeleteQuery] = useQuery({query: DELETE_PROPERTY, variables: {ids: [params?.id]}, pause: true
+  });
+
+  const delete_property = () => {
+    setIsLoading(true)
+    executeDeleteQuery()
+    setIsLoading(false)
+    router.push('/properties')
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -229,6 +240,7 @@ export default function Page(props: Props) {
         </Drawer>
       </Box>
 
+      {fetching ? <ActivityIndicator /> : (   
       <Box
         component="main"
         sx={{ overflowX: 'auto', flexGrow: 1, width: '100%', maxWidth: '100vw', color: '#000' }}
@@ -503,8 +515,45 @@ export default function Page(props: Props) {
             No Units Created Yet
           </Typography>
         )}
-      </Box>
 
+          <Grid 
+            item 
+            xs={12}
+          >
+            <Grid
+              container 
+              spacing={2} 
+              style={{margin: '25px'}}
+              alignItems={'center'}
+              justifyContent={'center'}
+              item
+              xs={10}
+            >
+              {/* Create User button */}
+              {isLoading ? <ActivityIndicator /> : 
+              (
+              <Button 
+                  variant="contained" 
+                  color="error"
+                  onClick={delete_property}
+                  style={{
+                      height: '50px',
+                      color: '#fff',
+                      borderRadius: '10px',
+                      fontWeight: 'bold',
+                      width: '250px'
+                  }}
+              >
+                  <Link href="/properties/1/unit/1/update">
+                      Delete Property
+                  </Link>
+              </Button>
+              )}
+            </Grid>
+          </Grid> 
+
+      </Box>
+      )}
     </Box>
     </ThemeProvider>
     </main>

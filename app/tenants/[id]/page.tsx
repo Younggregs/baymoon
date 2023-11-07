@@ -34,20 +34,12 @@ import ProfileMenu from '../../components/navigation/profile-menu';
 import Link from "next/link"
 import { useRouter, useSearchParams } from 'next/navigation'
 import Grid from '@mui/material/Grid';
-import SearchIcon from '@mui/icons-material/Search';
-import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormHelperText from '@mui/material/FormHelperText';
-import Checkbox from '@mui/material/Checkbox';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { TENANT_BY_ID } from '@/app/utils/queries';
+import { DELETE_TENANT, TENANT_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
 import formatDate from '@/app/lib/format/date';
+import ActivityIndicator from '@/app/components/activity-indicator';
 
 const drawerWidth = 240;
 const thumbsContainer = {
@@ -89,13 +81,22 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
   const [res] = useQuery({query: TENANT_BY_ID, variables: {id: params?.id} });
   const { data, fetching, error } = res;
 
-  const [todos, setTodos] = React.useState([{ name: "", label: "" }]); 
+  const [res2, executeQuery] = useQuery({query: DELETE_TENANT, variables: {ids: [params?.id]}, pause: true
+  });
+
+  const delete_tenant = () => {
+    setIsLoading(true)
+    executeQuery()
+    setIsLoading(false)
+    router.push('/tenants')
+  }
   
 
   const handleDrawerToggle = () => {
@@ -267,6 +268,7 @@ export default function Page(props: Props) {
         </Drawer>
       </Box>
 
+      {fetching ? <ActivityIndicator /> : (
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, color: '#000' }}
@@ -495,10 +497,13 @@ export default function Page(props: Props) {
             xs={10}
           >
             {/* Create User button */}
+            {isLoading ? <ActivityIndicator /> : 
+            (
             <Button 
                 variant="contained" 
+                color="error"
+                onClick={delete_tenant}
                 style={{
-                    backgroundColor: '#000', 
                     height: '50px',
                     color: '#fff',
                     borderRadius: '10px',
@@ -506,10 +511,9 @@ export default function Page(props: Props) {
                     width: '250px'
                 }}
             >
-                <Link href={`/tenants/${data?.tenantById?.id}/update`}>
-                    Update Tenant
-                </Link>
+              Delete Tenant
             </Button>
+            )}
         </Grid>
 
         </Grid>
@@ -517,7 +521,7 @@ export default function Page(props: Props) {
         </Grid>
 
       </Box>
-
+      )}
     </Box>
     </ThemeProvider>
     </main>

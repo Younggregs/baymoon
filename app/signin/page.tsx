@@ -103,7 +103,7 @@ export default function Signup() {
   }
 
   return (
-    <main className={stylesMain.main1} style={{backgroundColor: '#fff'}}>
+    <main className={stylesMain.main1} style={{backgroundColor: '#fff', color: '#000'}}>
       <Grid container>
         <Grid 
           style={styles.headerBox} 
@@ -151,7 +151,7 @@ export default function Signup() {
             alignItems="center"
           >
               <h2>Something went wrong.</h2>
-              <p>- Invalid link</p>
+              <p>- Invalid/Expired signin link</p>
           </Grid>
         )}
 

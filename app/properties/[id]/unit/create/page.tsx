@@ -89,8 +89,6 @@ export default function Page(props: Props) {
     );
   };
 
-  console.log('contacts: ', contacts)
-
   const submit = async () => {
     setIsLoading(true)
     const data = {

@@ -25,8 +25,9 @@ import Link from 'next/link';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import SearchIcon from '@mui/icons-material/Search';
-import { FETCH_USERS } from '../../utils/queries';
+import { DELETE_USER, FETCH_USERS } from '../../utils/queries';
 import { useQuery } from 'urql';
+import ActivityIndicator from '../activity-indicator';
 
 interface Data {
   firstname: string;
@@ -184,10 +185,23 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
+  selected: readonly string[];
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected } = props;
+  const { numSelected, selected } = props;
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [res2, executeQuery] = useQuery({query: DELETE_USER, variables: {ids: selected}, pause: true
+  });
+
+  const delete_users = () => {
+    // Delete User Query
+    setIsLoading(true)
+    executeQuery()
+    setIsLoading(false)
+    // Refresh Page
+    window.location.reload();
+  }
 
   return (
     <Toolbar
@@ -221,9 +235,15 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       )}
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          {isLoading ? ( 
+            <ActivityIndicator />
+          ) : (
+          <IconButton
+            onClick={delete_users}
+          >
             <DeleteIcon />
           </IconButton>
+          )}
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
@@ -313,7 +333,7 @@ export default function EnhancedTable({data}: {data: any[]}) {
   return (
     <Box sx={{ width: '100%', color: '#000' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} selected={selected} />
         <TableContainer>
           <Table
             sx={{ width: '80vw' }}

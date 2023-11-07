@@ -34,17 +34,21 @@ import Table from '../../components/users/table';
 import { useRouter, useSearchParams } from 'next/navigation'
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import { Search } from '@mui/icons-material';
-import FormLabel from '@mui/material/FormLabel';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
+import EditIcon from '@mui/icons-material/Edit';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import Checkbox from '@mui/material/Checkbox';
 import { USER_BY_ID, DELETE_USER } from '@/app/utils/queries';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
+import ActivityIndicator from '@/app/components/activity-indicator';
+import { useDropzone } from "react-dropzone";
+import Image from 'next/image'
+import { UPDATE_USER } from '@/app/utils/mutations';
 
 const drawerWidth = 240;
 
@@ -57,6 +61,15 @@ export default function Page(props: Props) {
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  const [first_name, setFirstName] = React.useState('');
+  const [last_name, setLastName] = React.useState('');
+  const [title, setTitle] = React.useState('');
+  const [phone_number, setPhoneNumber] = React.useState('');
+  const [file, setFile] = React.useState<any>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [errorMessage, setError] = React.useState(false)
+  const [success, setSuccess] = React.useState(false)
+
   const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
   const [res] = useQuery({query: USER_BY_ID, variables: {id: params?.id} });
@@ -66,12 +79,82 @@ export default function Page(props: Props) {
   const [res2, executeQuery] = useQuery({query: DELETE_USER, variables: {ids: [params?.id]}, pause: true
   });
  
+  const [updateUserResult, updateUser] = useMutation(UPDATE_USER);
+
+  const update_user = () => {
+    const p = [
+      state.dashboard ? 'Dashboard' : null,
+      state.properties ? 'Properties' : null,
+      state.tenants ? 'Tenants' : null,
+      state.income ? 'Income' : null,
+      state.expenses ? 'Expenses' : null,
+      state.users ? 'Users' : null,
+    ]
+    const permissions = p.filter((v) => v !== null)
+
+    const data = {
+      id: params?.id,
+      first_name,
+      last_name,
+      phone_number,
+      title,
+      file,
+      permissions
+    }
+    updateUser(data).then(result => {
+      setIsLoading(false)
+      const res = result?.data?.updateUser as any
+      if (result.error) {
+        console.error('Oh no!', result.error);
+        setError(res?.errors[0]?.message)
+      }else if(!res?.success){
+        console.log(res?.errors.message)
+          setError(res?.errors.message)
+      }
+      else{
+          setSuccess(true)
+      }
+      
+    });
+  }
 
   const delete_user = () => {
     // Delete User Query
+    setIsLoading(true)
     executeQuery()
+    setIsLoading(false)
     router.push('/users')
   }
+
+
+  React.useEffect(() => {
+    if (data?.userById) {
+      setFirstName(data?.userById?.firstName)
+      setLastName(data?.userById?.lastName)
+      setPhoneNumber(data?.userById?.phoneNumber)
+      setTitle(data?.userById?.title)
+
+      // Initialize state with data?.userById?.permissions
+      const permissions = data?.userById?.permissions
+      setState({
+        dashboard: permissions?.includes('Dashboard'),
+        properties: permissions?.includes('Properties'),
+        tenants: permissions?.includes('Tenants'),
+        income: permissions?.includes('Income'),
+        expenses: permissions?.includes('Expenses'),
+        users: permissions?.includes('Users'),
+      });
+    }
+  }, [data])
+
+  const {getRootProps, getInputProps} = useDropzone({
+    accept: {
+      'image/*': []
+    },
+    onDrop: acceptedFiles => {
+        setFile( Object.assign(acceptedFiles[0], {preview: URL.createObjectURL(acceptedFiles[0])} ));
+    }
+  });
 
 
   const handleDrawerToggle = () => {
@@ -97,15 +180,14 @@ export default function Page(props: Props) {
         break;
     }
   }
-
   // Initialize state with data?.userById?.permissions
   const [state, setState] = React.useState({
-    dashboard: data?.userById?.permissions?.includes('dashboard'),
-    properties: data?.userById?.permissions?.includes('properties'),
-    tenants: data?.userById?.permissions?.includes('tenants'),
-    income: data?.userById?.permissions?.includes('income'),
-    expenses: data?.userById?.permissions?.includes('expenses'),
-    users: data?.userById?.permissions?.includes('users'),
+    dashboard: false,
+    properties: false,
+    tenants: false,
+    income: false,
+    expenses: false,
+    users: false,
   });
 
   const { dashboard, properties, tenants, income, expenses, users } = state;
@@ -259,10 +341,12 @@ export default function Page(props: Props) {
         </Drawer>
       </Box>
 
+      {fetching ? <ActivityIndicator /> : (
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, color: '#000' }}
       >
+
         <Toolbar>
             <IconButton
                 edge="start"
@@ -282,6 +366,63 @@ export default function Page(props: Props) {
 
         <Grid>
             {/* Form */}
+            <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+                <Grid 
+                    style={style.imageContainer}
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <Grid
+                        container
+                        style={{width: '200px', height: '200px'}}
+                    >
+                        {!file?.preview && !data?.userById?.profilePicture && (
+                            <ContactPageIcon style={{margin: 'auto', fontSize: 200}}/>
+                        )}
+
+                        {!file?.preview && data?.userById?.profilePicture && (
+                            <Image 
+                                src={data?.userById?.profilePicture} 
+                                style={{backgroundSize: 'cover', borderRadius: '20px'}}
+                                height={200}
+                                width={200}
+                                alt="profile image"
+                            />
+                        )}
+
+                        {file?.preview && (
+                            <Image 
+                                src={file.preview} 
+                                style={{backgroundSize: 'cover', borderRadius: '20px'}}
+                                height={200}
+                                width={200}
+                                alt="profile image"
+                            />
+                        )}   
+                    </Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-end"
+                        alignItems="center"
+                    >
+                        <Grid {...getRootProps({className: 'dropzone'})}>
+                            <input {...getInputProps()} />
+                            <IconButton>
+                                <EditIcon style={{color: '#ff0000'}}/>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                </Grid>
+          </Grid>
+
             <Grid 
                 container 
                 spacing={2} 
@@ -294,7 +435,8 @@ export default function Page(props: Props) {
                 <input
                     type="text"
                     placeholder="Firstname"
-                    value = {data?.userById?.firstName}
+                    value={first_name}
+                    onChange={(e) => setFirstName(e.target.value)}
                     style={{
                         width: '250px',
                         height: '50px', 
@@ -323,7 +465,8 @@ export default function Page(props: Props) {
                 <input
                     type="text"
                     placeholder="Lastname"
-                    value = {data?.userById?.lastName}
+                    value={last_name}
+                    onChange={(e) => setLastName(e.target.value)}
                     style={{
                         width: '250px',
                         height: '50px', 
@@ -369,6 +512,36 @@ export default function Page(props: Props) {
                 />
             </Grid>
 
+            <Grid 
+                container 
+                spacing={2} 
+                style={{marginTop: '5px'}}
+                direction="column"
+            >
+                <Typography fontWeight={'bold'}>
+                    Phone Number
+                </Typography>
+                <input
+                    type="text"
+                    placeholder="Phone Number"
+                    value={phone_number}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    style={{
+                        width: '250px',
+                        height: '50px', 
+                        padding: '12px 20px',
+                        margin: '8px 0',
+                        backgroundColor: '#fff',
+                        color: '#000',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                        border: '1px solid #000',
+                        borderRadius: '5px',
+                    }}
+                />
+            </Grid>
+
              <Grid 
                 container 
                 spacing={2} 
@@ -381,7 +554,8 @@ export default function Page(props: Props) {
                 <input
                     type="text"
                     placeholder="Title"
-                    value = {data?.userById?.title}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     style={{
                         width: '250px',
                         height: '50px', 
@@ -518,9 +692,24 @@ export default function Page(props: Props) {
             style={{marginTop: '15px'}}
             direction="column"
         >
-
+            {success ? (
+                <Typography style={{color: 'green'}}>
+                    Updated Successfully
+                </Typography>
+            ) : (
+                <Typography style={{color: 'red'}}>
+                    {errorMessage}
+                </Typography>
+            )}
+            {isLoading ? <ActivityIndicator /> : 
+            (
+            <Grid
+              container
+              direction={'column'}
+            >
             <Button 
                 variant="contained" 
+                onClick={update_user}
                 style={{
                     backgroundColor: '#000', 
                     height: '50px',
@@ -533,7 +722,6 @@ export default function Page(props: Props) {
             >
               Update User
             </Button>
-
             <Button 
                 variant="contained" 
                 color="error"
@@ -549,14 +737,23 @@ export default function Page(props: Props) {
             >
               Delete User
             </Button>
-
+            </Grid>
+            )}
             
         </Grid>
-        
       </Box>
-
+      )}
     </Box>
     </ThemeProvider>
     </main>
   );
+}
+
+const style = {
+  imageContainer: {
+    display: 'flex',
+    height: 250,
+    width: 250,
+    borderRadius: '20px',
+},
 }

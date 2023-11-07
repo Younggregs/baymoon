@@ -78,10 +78,6 @@ export default function Page() {
   const [payment_method, setPaymentMethod] = React.useState('')
   const [date, setDate] = React.useState<Date | null>(new Date());
 
-  
-  console.log('amount: ', amount, currency)
-  
-
   const [createTransactionResult, createTransaction] = useMutation(CREATE_TRANSACTION);
 
   const submit = async () => {
@@ -102,7 +98,6 @@ export default function Page() {
       if (res.error) {
         console.log('Error creating income')
       } else {
-        console.log('Income created successfully')
         router.push('/income')
       }
     })

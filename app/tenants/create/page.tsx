@@ -612,14 +612,16 @@ export default function Page() {
                 <Grid 
                     container 
                     spacing={2} 
-                    style={{margin: '5px'}}
+                    style={{margin: '5px', marginTop: '0px'}}
                     direction="column"
                     item
                     xs={12}
                     sm={4}
                 >
                     <FormControl fullWidth style={{marginTop: '10px'}}>
-                        <InputLabel id="demo-simple-select-label">Field Type</InputLabel>
+                        <InputLabel id="demo-simple-select-label">
+                          Field Type
+                        </InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -642,7 +644,7 @@ export default function Page() {
                     alignItems={'flex-end'}
                     item
                     xs={12}
-                    sm={4}
+                    sm={3}
                 >
                   <Button 
                     variant="outlined" 

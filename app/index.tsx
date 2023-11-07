@@ -50,8 +50,6 @@ export default function Page() {
   const [res] = useQuery({query: FETCH_SUMMARY, variables: {currency} });
   const { data, fetching, error } = res;
 
-  console.log('currency', currency)
-
   const transactions = [
     { id: 0, value: data?.summary?.income, label: 'Income' },
     { id: 1, value: data?.summary?.expense, label: 'Expense' }
@@ -157,8 +155,6 @@ export default function Page() {
       },
     },
   });
-
-  console.log('user', features)
 
   return (
     <main 
@@ -515,7 +511,7 @@ export default function Page() {
                       component="div" 
                       sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
                   >
-                    Income/Expenses Statistics
+                    Income/Expense Statistics
                   </Typography>
                   <Divider style={{margin: '10px'}} />
                   <PieChart

@@ -29,12 +29,13 @@ import ProfileMenu from '../../components/navigation/profile-menu';
 import Link from "next/link"
 import { useRouter } from 'next/navigation'
 import Grid from '@mui/material/Grid';
-import { TRANSACTION_BY_ID } from '@/app/utils/queries';
+import { DELETE_TRANSACTION, TRANSACTION_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
 import { currencySymbols } from '@/app/lib/constants';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
 import formatDate from '@/app/lib/format/date';
+import ActivityIndicator from '@/app/components/activity-indicator';
 
 const drawerWidth = 240;
 
@@ -46,11 +47,23 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
   const [res] = useQuery({query: TRANSACTION_BY_ID, variables: {id: params?.id} });
   const { data, fetching, error: error_ } = res;
+
+  const [res2, executeQuery] = useQuery({query: DELETE_TRANSACTION, variables: {ids: [params?.id]}, pause: true
+  });
+
+  const delete_transaction = () => {
+    setIsLoading(true)
+    executeQuery()
+    setIsLoading(false)
+    router.push('/expenses')
+  }
+
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -238,6 +251,7 @@ export default function Page(props: Props) {
         </Drawer>
       </Box>
 
+      {fetching ? <ActivityIndicator /> : (  
       <Box
         component="main"
         sx={{ flexGrow: 1, width: '100%', maxWidth: '100vw', color: '#000' }}
@@ -485,10 +499,13 @@ export default function Page(props: Props) {
             justifyContent={'center'}
         >
             {/* Create User button */}
+            {isLoading ? <ActivityIndicator /> : 
+            (
             <Button 
                 variant="contained" 
-                style={{
-                    backgroundColor: '#000', 
+                color="error"
+                onClick={delete_transaction}
+                style={{ 
                     height: '50px',
                     color: '#fff',
                     borderRadius: '10px',
@@ -496,14 +513,13 @@ export default function Page(props: Props) {
                     width: '250px'
                 }}
             >
-                <Link href="/expenses/1/update">
-                    Update Expense
-                </Link>
+              Delete Expense
             </Button>
+            )}
         </Grid>
         
       </Box>
-
+      )}
     </Box>
     </ThemeProvider>
     </main>

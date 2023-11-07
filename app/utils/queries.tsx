@@ -63,7 +63,8 @@ const USER_BY_ID = gql`
       email,
       phoneNumber,
       title,
-      permissions
+      permissions,
+      profilePicture,
     }
   }
 `;
@@ -137,6 +138,15 @@ const PROPERTY_BY_ID = gql`
     }
   }
 `;
+
+const DELETE_PROPERTY = gql`
+  query DeleteProperties($ids: [String!]) {
+    deleteProperties(ids: $ids) {
+      ids,
+    }
+  }
+`;
+
 {/* End of Property Queries */}
 
 {/* Unit Queries */}
@@ -189,6 +199,7 @@ const UNIT_BY_ID = gql`
       price,
       currency,
       paymentPlan,
+      published,
       contactUsers{
         firstName,
         lastName,
@@ -218,6 +229,24 @@ const UNIT_BY_ID = gql`
     }
   }
 `;
+
+const SET_PUBLISHED = gql`
+  query SetPublished($id: String, $published: Boolean) {
+    setPublished(id: $id, published: $published) {
+      id,
+      published
+    }
+}
+`;
+
+const DELETE_UNIT = gql`
+  query DeleteUnits($ids: [String!]) {
+    deleteUnits(ids: $ids) {
+      ids,
+    }
+  }
+`;
+
 {/* End of Unit Queries */}
 
 {/* Tenant Queries */}
@@ -275,6 +304,15 @@ const TENANT_BY_ID = gql`
     }
   }
 `;
+
+const DELETE_TENANT = gql`
+  query DeleteTenants($ids: [String!]) {
+    deleteTenants(ids: $ids) {
+      ids,
+    }
+  }
+`;
+
 {/* End of Tenant Queries */}
 
 {/* Transaction Queries */}
@@ -338,6 +376,14 @@ const TRANSACTION_BY_ID = gql`
     }
 }
 `;
+
+const DELETE_TRANSACTION = gql`
+  query DeleteTransactions($ids: [String!]) {
+    deleteTransactions(ids: $ids) {
+      ids,
+    }
+  }
+`;
 {/* End of Transaction Queries */}
 
 {/* Summary Queries */}
@@ -365,11 +411,16 @@ export {
     USER_BY_ID,
     FETCH_PROPERTIES,
     PROPERTY_BY_ID,
+    DELETE_PROPERTY,
     FETCH_UNITS,
     UNIT_BY_ID,
+    SET_PUBLISHED,
+    DELETE_UNIT,
     FETCH_TENANTS,
     TENANT_BY_ID,
+    DELETE_TENANT,
     FETCH_TRANSACTIONS, 
     TRANSACTION_BY_ID,
+    DELETE_TRANSACTION,
     FETCH_SUMMARY
 }

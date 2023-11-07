@@ -34,12 +34,14 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from 'next/navigation'
 import Grid from '@mui/material/Grid';
 import ImageCarousel from '@/app/components/properties/units/image-carousel';
-import { UNIT_BY_ID } from '@/app/utils/queries';
+import { DELETE_UNIT, SET_PUBLISHED, UNIT_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
 import { currencySymbols } from '@/app/lib/constants';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
 import formatDate from '@/app/lib/format/date';
+import ActivityIndicator from '@/app/components/activity-indicator';
+import Switch from '@mui/material/Switch';
 
 const drawerWidth = 240;
 interface Props {
@@ -54,15 +56,48 @@ export default function Page(props: Props) {
   const router = useRouter()
   const { params } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [checked, setChecked] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
   const [res] = useQuery({query: UNIT_BY_ID, variables: {id: params?._id} });
   const { data, fetching, error } = res;
+
+  const [res2, executePublishQuery] = useQuery({query: SET_PUBLISHED, variables: {id: params?._id, published: checked}, pause: true
+  });
+
+  const [res3, executeDeleteQuery] = useQuery({query: DELETE_UNIT, variables: {ids: [params?._id]}, pause: true
+  });
+
+  const delete_unit = () => {
+    setIsLoading(true)
+    executeDeleteQuery()
+    setIsLoading(false)
+    router.back()
+  }
   
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
+
+  React.useEffect(() => {
+    executePublishQuery()
+  }
+  , [checked])
+
+  React.useEffect(() => {
+    if (data?.unitById?.published) {
+      setChecked(true);
+    } else {
+      setChecked(false);
+    }
+  }
+  , [data])
 
   const getIcon = (key: string) => {
     switch (key) {
@@ -225,6 +260,7 @@ export default function Page(props: Props) {
         </Drawer>
       </Box>
 
+      {fetching ? <ActivityIndicator /> : (   
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, color: '#000' }}
@@ -534,7 +570,38 @@ export default function Page(props: Props) {
                 </Typography>
               </Grid> 
               )}
-              
+
+
+              <Grid
+                item
+                xs={12}
+              >
+              <Typography 
+                  variant="h6" 
+                  component="div" 
+                  sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+                >
+                  Set Public Listing Status
+                </Typography>
+                <Divider style={{margin: '10px'}} />
+                <Divider style={{margin: '10px'}} />
+                <Grid
+                  container
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                >
+                  <Switch
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                    style={{color: '#000'}}
+                    color={'secondary'}
+                  />
+                  <Typography>
+                    {checked ? 'Public' : 'Private'}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
           {/* End of Details */}
@@ -553,10 +620,13 @@ export default function Page(props: Props) {
               xs={10}
             >
               {/* Create User button */}
+              {isLoading ? <ActivityIndicator /> : 
+              (
               <Button 
                   variant="contained" 
+                  color="error"
+                  onClick={delete_unit}
                   style={{
-                      backgroundColor: '#000', 
                       height: '50px',
                       color: '#fff',
                       borderRadius: '10px',
@@ -565,16 +635,17 @@ export default function Page(props: Props) {
                   }}
               >
                   <Link href="/properties/1/unit/1/update">
-                      Update Unit
+                      Delete Unit
                   </Link>
               </Button>
+              )}
             </Grid>
           </Grid> 
 
         </Grid>
 
       </Box>
-
+      )}
     </Box>
     </ThemeProvider>
     </main>

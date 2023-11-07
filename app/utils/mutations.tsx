@@ -54,8 +54,8 @@ const CREATE_USER = gql`
 `;
 
 const UPDATE_USER = gql`
-    mutation UpdateUser($first_name: String!, $last_name: String!, $phone_number: String,  $file: Upload) {
-  updateUser(firstName: $first_name, lastName: $last_name, phoneNumber: $phone_number, file: $file) {
+    mutation UpdateUser($id: String, $first_name: String, $last_name: String, $phone_number: String, $file: Upload, $title: String, $permissions: [String]) {
+  updateUser(id: $id, firstName: $first_name, lastName: $last_name, phoneNumber: $phone_number, file: $file, title: $title, permissions: $permissions) {
     user {
         id,
         firstName,

@@ -21,35 +21,38 @@ export default function Profiel() {
     const [phone_number, setPhoneNumber] = React.useState(user().phone_number);
     const [file, setFile] = React.useState<any>(null);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [errorMessage, setError] = React.useState(false)
+    const [success, setSuccess] = React.useState(false)
 
     const [updateUserResult, updateUser] = useMutation(UPDATE_USER);
-
-    console.log('file', file)
 
     const submit = () => {
         setIsLoading(true);
         const data = {
+            id: null,
             first_name,
             last_name,
             phone_number,
-            file
+            title: null,
+            file,
+            permissions: []
         }
-        console.log('data', data)
         updateUser(data).then(result => {
             setIsLoading(false)
             const res = result?.data?.updateUser as any
             if (result.error) {
-              console.error('Oh no!', result.error);
+                setError(res?.errors[0]?.message)
             }else if(!res?.success){
-              console.log(res?.errors.message)
+                setError(res?.errors.message)
             }
             else{
-                console.log('control reached here', res)
                 localStorage.setItem('first_name', res?.user.firstName);
                 localStorage.setItem('last_name', res?.user.lastName);
                 localStorage.setItem('phone_number', res?.user.phoneNumber);
                 localStorage.setItem('profile_picture', res?.user.profilePicture)
                 localStorage.setItem('title', res?.user?.title || '')
+
+                setSuccess(true)
             }
             
         });
@@ -294,7 +297,17 @@ export default function Profiel() {
                     style={{marginTop: '15px'}}
                     alignItems="center"
                     justifyContent="center"
+                    direction={'column'}
                 >
+                    {success ? (
+                        <Typography style={{color: 'green'}}>
+                            Saved Successfully
+                        </Typography>
+                    ) : (
+                        <Typography style={{color: 'red'}}>
+                            {errorMessage}
+                        </Typography>
+                    )}
                 {isLoading ? <ActivityIndicator /> : 
                 (
                     <Button 
