@@ -517,7 +517,7 @@ export default function Page(props: Props) {
                 }}
             >
                 <Link href="/income/1/update">
-                    Update Income Schedule
+                    Delete Income
                 </Link>
             </Button>
             )}
