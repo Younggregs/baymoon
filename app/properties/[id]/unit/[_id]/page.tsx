@@ -36,7 +36,7 @@ import Grid from '@mui/material/Grid';
 import ImageCarousel from '@/app/components/properties/units/image-carousel';
 import { DELETE_UNIT, SET_PUBLISHED, UNIT_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
-import { currencySymbols } from '@/app/lib/constants';
+import { currencyFormat, currencySymbols } from '@/app/lib/constants';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
 import formatDate from '@/app/lib/format/date';
@@ -332,7 +332,7 @@ export default function Page(props: Props) {
                   variant={'h5'}
                   style={style.value}
                 >
-                  {currencySymbols[data?.unitById?.currency as keyof typeof currencySymbols]}{data?.unitById?.price}
+                  {currencyFormat[data?.unitById?.currency as keyof typeof currencyFormat].format.format(data?.unitById?.price)}
                 </Typography>
               </Grid>
 
@@ -382,7 +382,7 @@ export default function Page(props: Props) {
                 <Typography
                   style={style.value}
                 >
-                  {currencySymbols[data?.unitById?.currency as keyof typeof currencySymbols]}{data?.unitById?.price}
+                  {currencyFormat[data?.unitById?.currency as keyof typeof currencyFormat].format.format(data?.unitById?.price)}
                 </Typography>
               </Grid>
               <Grid

@@ -34,7 +34,7 @@ import { PieChart, pieArcClasses } from '@mui/x-charts/PieChart';
 import { useQuery } from 'urql';
 import { FETCH_SUMMARY } from './utils/queries';
 import NameTitle from './components/users/name-title';
-import { currencies, currencySymbols } from './lib/constants';
+import { currencies, currencyFormat, currencySymbols } from './lib/constants';
 import MenuItem from '@mui/material/MenuItem';
 import user from './lib/user-details';
 import ActivityIndicator from './components/activity-indicator';
@@ -358,11 +358,13 @@ export default function Page() {
 
         <Grid
           item
-          xs={6}
+          xs={12}
+          sm={6}
           container
           direction={'column'}
           alignItems={'center'}
           justifyItems={'center'}
+          style={{marginBottom: '20px'}}
         >
             <Typography
                 component="div" 
@@ -375,17 +377,19 @@ export default function Page() {
                 component="div" 
                 sx={style.value}
             >
-                {currencySymbols[currency.toUpperCase() as keyof typeof currencySymbols]}{data?.summary?.income}
+                {currencyFormat[currency.toUpperCase() as keyof typeof  currencyFormat].format.format(data?.summary?.income)}
             </Typography>
         </Grid>
 
         <Grid
           item
-          xs={6}
+          xs={12}
+          sm={6}
           container
           direction={'column'}
           alignItems={'center'}
           justifyItems={'center'}
+          style={{marginBottom: '20px'}}
         >
           <Typography
               component="div" 
@@ -398,7 +402,7 @@ export default function Page() {
               component="div" 
               sx={style.value}
           >
-             {currencySymbols[currency.toUpperCase() as keyof typeof currencySymbols]}{data?.summary?.expense}
+            {currencyFormat[currency.toUpperCase() as keyof typeof  currencyFormat].format.format(data?.summary?.expense)}
           </Typography>
         </Grid>
 
@@ -409,6 +413,7 @@ export default function Page() {
           direction={'column'}
           alignItems={'center'}
           justifyItems={'center'}
+          style={{marginBottom: '20px'}}
         >
             <Typography
                 component="div" 
@@ -417,11 +422,11 @@ export default function Page() {
               Total Balance
             </Typography>
             <Typography
-                variant="h3" 
+                variant="h4" 
                 component="div" 
                 sx={style.value}
             >
-                {currencySymbols[currency.toUpperCase() as keyof typeof currencySymbols]}{data?.summary?.balance}
+              {currencyFormat[currency.toUpperCase() as keyof typeof  currencyFormat].format.format(data?.summary?.balance)}
             </Typography>
         </Grid>
 

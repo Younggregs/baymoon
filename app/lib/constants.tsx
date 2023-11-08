@@ -23,6 +23,27 @@ const currencySymbols = {
     EURO: "€"
 }
 
+const currencyFormat = {
+    NAIRA: {
+      format: new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'NGN',
+    })
+    },
+    DOLLAR: {
+      format: new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    })
+    },
+    EURO: {
+      format: new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'EUR',
+    })
+    }
+}
+
 const paymentPlan = [
     {
         value: "daily",
@@ -62,5 +83,6 @@ export {
     currencies,
     currencySymbols,
     paymentPlan,
-    features
+    features,
+    currencyFormat
 }

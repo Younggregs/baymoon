@@ -31,7 +31,7 @@ import { useRouter } from 'next/navigation'
 import Grid from '@mui/material/Grid';
 import { DELETE_TRANSACTION, TRANSACTION_BY_ID } from '@/app/utils/queries';
 import { useQuery } from 'urql';
-import { currencySymbols } from '@/app/lib/constants';
+import { currencyFormat, currencySymbols } from '@/app/lib/constants';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
 import formatDate from '@/app/lib/format/date';
@@ -304,11 +304,11 @@ export default function Page(props: Props) {
                 direction={'column'}
             >
                 <Typography
-                    variant="h3" 
+                    variant="h4" 
                     component="div" 
                     sx={{ fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}
                 >
-                  {currencySymbols[data?.transactionById?.currency as keyof typeof currencySymbols]}{data?.transactionById?.amount}
+                  {currencyFormat[data?.transactionById?.currency as keyof typeof currencyFormat].format.format(data?.transactionById?.amount)}
                 </Typography>
                 <Typography
                     variant="h6" 
@@ -329,7 +329,8 @@ export default function Page(props: Props) {
             >
                 <Grid
                     item
-                    xs={6}
+                    xs={12}
+                    sm={6}
                     container
                     direction={'column'}
                 >
@@ -346,13 +347,14 @@ export default function Page(props: Props) {
                             component="div" 
                             sx={styles.value}
                         >
-                            {data?.transactionById?.amount}
+                          {currencyFormat[data?.transactionById?.currency as keyof typeof currencyFormat].format.format(data?.transactionById?.amount)}
                         </Typography>
                     </Grid>
                 </Grid>
                 <Grid
                     item
-                    xs={6}
+                    xs={12}
+                    sm={6}
                     container
                     direction={'column'}
                 >
@@ -375,7 +377,8 @@ export default function Page(props: Props) {
                 </Grid>
                 <Grid
                     item
-                    xs={6}
+                    xs={12}
+                    sm={6}
                     container
                     direction={'column'}
                 >
@@ -398,7 +401,8 @@ export default function Page(props: Props) {
                 </Grid>
                 <Grid
                     item
-                    xs={6}
+                    xs={12}
+                    sm={6}
                     container
                     direction={'column'}
                 >
@@ -421,7 +425,8 @@ export default function Page(props: Props) {
                 </Grid>
                 <Grid
                     item
-                    xs={6}
+                    xs={12}
+                    sm={6}
                     container
                     direction={'column'}
                 >
@@ -444,7 +449,8 @@ export default function Page(props: Props) {
                 </Grid>
                 <Grid
                     item
-                    xs={6}
+                    xs={12}
+                    sm={6}
                     container
                     direction={'column'}
                 >
@@ -468,6 +474,7 @@ export default function Page(props: Props) {
                 <Grid
                     item
                     xs={12}
+                    sm={6}
                     container
                     direction={'column'}
                 >
