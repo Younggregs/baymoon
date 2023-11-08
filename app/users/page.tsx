@@ -278,7 +278,13 @@ export default function Page() {
             </Button>
         </Toolbar>
         {fetching && !search && (
-          <ActivityIndicator />
+          <Grid
+            container
+            alignItems={'center'}
+            justifyContent={'center'}
+          >
+              <ActivityIndicator />
+          </Grid>
         )}
 
         {!fetching && data && (

@@ -503,7 +503,13 @@ export default function Page(props: Props) {
             </Button>
         </Toolbar>
         {fetching && !search && (
-          <ActivityIndicator />
+        <Grid
+          container
+          alignItems={'center'}
+          justifyContent={'center'}
+        >
+            <ActivityIndicator />
+        </Grid>
         )}
 
         {!fetching && data && (
