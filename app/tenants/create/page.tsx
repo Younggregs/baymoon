@@ -84,7 +84,7 @@ export default function Page() {
     createTenant(data).then((result) => {
       setIsLoading(false)
       if (result.data?.createTenant?.success) {
-        router.push('/tenants')
+        router.push(`/tenants/${result.data?.createTenant?.tenant?.id}`)
       }
     })
   }

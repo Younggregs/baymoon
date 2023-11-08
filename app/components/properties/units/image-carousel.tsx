@@ -14,6 +14,7 @@ export default function ImageCarousel({ images }: { images: string[]}) {
                             alt='image'
                             width={500}
                             height={500}
+                            style={{ objectFit: 'cover' }}
                         />
                         <p className="legend">Image {index}</p>
                     </div>

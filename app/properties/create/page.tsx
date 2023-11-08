@@ -76,7 +76,7 @@ export default function Page() {
         setErrors(res?.errors.message)
       }
       else{
-        router.push('/properties')
+        router.push(`/properties/${res?.property?.id}`)
       }
     })
   }

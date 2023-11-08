@@ -99,7 +99,7 @@ export default function Page() {
       if (res.error) {
         console.log('Error creating income')
       } else {
-        router.push('/expenses')
+        router.push(`/expenses/${res.data.createTransaction.transaction.id}`)
       }
     })
   }

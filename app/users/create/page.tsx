@@ -91,7 +91,7 @@ export default function Page() {
       if (result.error) {
         console.error("Oh no!", result.error);
       }
-      router.push('/users')
+      router.push(`/users/${result?.data?.createUser?.user.id}`)
     });
     
   };

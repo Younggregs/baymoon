@@ -121,7 +121,7 @@ export default function Page(props: Props) {
         console.log(res?.errors.message)
       }
       else{
-        router.push(`/properties/${params?.id}`)
+        router.push(`/properties/${params?.id}/unit/${res?.propertyUnit?.id}`)
       }
       
     });
