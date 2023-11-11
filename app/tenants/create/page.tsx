@@ -470,6 +470,7 @@ export default function Page() {
                 <Typography fontWeight={'bold'}>
                     Select Property
                 </Typography>
+                {fetching ? <ActivityIndicator /> : (
                 <FormControl fullWidth style={{marginTop: '10px'}}>
                     <InputLabel id="demo-simple-select-label">Property</InputLabel>
                     <Select
@@ -484,6 +485,7 @@ export default function Page() {
                       ))}
                     </Select>
                 </FormControl>
+                )}
             </Grid>
 
             <Grid 
@@ -498,6 +500,7 @@ export default function Page() {
                 <Typography fontWeight={'bold'}>
                     Select Unit
                 </Typography>
+                {fetching2 ? <ActivityIndicator /> : (
                 <FormControl fullWidth style={{marginTop: '10px'}}>
                     <InputLabel id="demo-simple-select-label">Unit</InputLabel>
                     <Select
@@ -512,6 +515,7 @@ export default function Page() {
                         ))}
                     </Select>
                 </FormControl>
+                )}
             </Grid>
 
           </Grid>
