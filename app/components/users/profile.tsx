@@ -13,7 +13,7 @@ import Image from 'next/image'
 import { UPDATE_USER } from "@/app/utils/mutations";
 import { useMutation } from "urql";
 
-export default function Profiel() {
+export default function Profile() {
     const [first_name, setFirstName] = React.useState(user().first_name);
     const [last_name, setLastName] = React.useState(user().last_name);
     const email = user().email;

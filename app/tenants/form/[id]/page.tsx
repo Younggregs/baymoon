@@ -16,6 +16,8 @@ import { useMutation, useQuery } from 'urql';
 import { UPDATE_TENANT } from '@/app/utils/mutations';
 import ActivityIndicator from '../../../components/activity-indicator';
 import user from '@/app/lib/user-details';
+import File from '@/app/components/tenants/file';
+import FileView from '@/app/components/tenants/file_view';
 
 const drawerWidth = 240;
 
@@ -149,16 +151,20 @@ export default function Page(props: Props) {
               alignItems={'center'}
               sx={{p: 2}}
             > 
+              {!data?.tenantById?.tenantHasRecorded && (
               <Typography 
                 style={{marginBottom: '10px', marginTop: '20px'}}
                 variant="body2"
               >
                 Hello {data?.tenantById?.firstName}, you have been been invited by your Landlord to please fill and/or update the form below to complete your tenant registration.
               </Typography>
+              )}
+              
               <Typography
                 style={{marginBottom: '10px', marginTop: '20px', fontStyle: 'italic', fontWeight: 'bold'}}
                 variant="body2"
               >
+                Tenant: {data?.tenantById?.firstName} {data?.tenantById?.lastName} <br />
                 Property: {data?.tenantById?.property} <br />
                 Unit: {data?.tenantById?.unit} <br />
                 Landlord: {data?.tenantById?.landlord}
@@ -337,6 +343,33 @@ export default function Page(props: Props) {
             </Grid>
             ))}
 
+          <Grid item xs={12}>
+            <Typography 
+                variant="h6" 
+                component="div" 
+                sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+            >
+                Files
+            </Typography>
+            <Divider style={{margin: '10px'}} />
+
+            {data?.tenantById?.files.map((file: any, index: number) => (
+              <Grid
+                key={index}
+              >
+              {data?.tenantById?.tenantHasRecorded ? (
+                <FileView
+                  file={file}
+                />
+              ) : (
+                <File
+                  fileObj={file}
+                />
+              )}
+              </Grid>
+            ))}
+          </Grid>
+
           </Grid>
           </Grid>
 
@@ -348,6 +381,8 @@ export default function Page(props: Props) {
           alignItems={'center'}
           justifyContent={'center'}
           >
+
+          {!data?.tenantById?.tenantHasRecorded && (
 
           <Grid
             container 
@@ -386,6 +421,7 @@ export default function Page(props: Props) {
             </Button>
           )}
         </Grid>
+        )}
 
         </Grid>
         </Grid>  

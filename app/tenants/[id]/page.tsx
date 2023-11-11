@@ -40,6 +40,7 @@ import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
 import formatDate from '@/app/lib/format/date';
 import ActivityIndicator from '@/app/components/activity-indicator';
+import FileView from '@/app/components/tenants/file_view';
 
 const drawerWidth = 240;
 const thumbsContainer = {
@@ -480,6 +481,28 @@ export default function Page(props: Props) {
                 </Grid>
             ))}
 
+            <Grid item xs={12}>
+              <Typography 
+                  variant="h6" 
+                  component="div" 
+                  sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+              >
+                Files
+              </Typography>
+              <Divider style={{margin: '10px'}} />
+            </Grid>
+            <Grid
+              container
+              spacing={2}
+              direction={'column'}
+            >
+            {data?.tenantById?.files?.map((item: any, index: number) => (
+              <FileView
+                key={index}
+                file={item}
+              />
+            ))}
+            </Grid>
           
           <Grid
           container
@@ -495,8 +518,26 @@ export default function Page(props: Props) {
             justifyContent={'center'}
             item
             xs={10}
+            direction={'column'}
           >
-            {/* Create User button */}
+            <Button 
+                variant="contained" 
+                color="error"
+                style={{
+                  backgroundColor: '#228B22',
+                  height: '50px',
+                  color: '#fff',
+                  borderRadius: '10px',
+                  fontWeight: 'bold',
+                  width: '250px',
+                  marginBottom: '35px'
+                }}
+            >
+              <Link href={`/tenants/${params?.id}/update`}>
+                Update Tenant
+              </Link>
+            </Button>
+            
             {isLoading ? <ActivityIndicator /> : 
             (
             <Button 

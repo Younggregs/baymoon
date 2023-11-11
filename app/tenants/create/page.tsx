@@ -60,6 +60,7 @@ export default function Page() {
   const [email, setEmail] = React.useState('');
   const [phone_number, setPhoneNumber] = React.useState('');
   const [todos, setTodos] = React.useState([{ name: "", type: "", value: "" }]); 
+  const [files, setFiles] = React.useState([{name: ""}]);
 
   const [res] = useQuery({query: FETCH_PROPERTIES, variables: {search: ""} });
   const { data: properties, fetching, error } = res;
@@ -79,8 +80,10 @@ export default function Page() {
       phone_number,
       property_id: property,
       unit_id: unit,
-      more_info: JSON.stringify(todos)
+      more_info: JSON.stringify(todos),
+      files: files.map((file) => file.name)
     }
+    console.log(data)
     createTenant(data).then((result) => {
       setIsLoading(false)
       if (result.data?.createTenant?.success) {
@@ -88,8 +91,6 @@ export default function Page() {
       }
     })
   }
-
- 
   
   const handleTodoChange = (e: any, i: number) => { 
     const field = e.target.name as keyof typeof todos[number]; 
@@ -107,6 +108,24 @@ export default function Page() {
     newTodos.splice(i, 1); 
     setTodos(newTodos); 
   };  
+
+  // Handle files
+  const handleFileChange = (e: any, i: number) => {
+    const field = e.target.name as keyof typeof files[number]; 
+    const newFiles = [...files];
+    newFiles[i][field] = e.target.value; 
+    setFiles(newFiles); 
+  }
+
+  const handleAddFile = () => {
+    setFiles([...files, {name: ""}]);
+  }
+
+  const handleDeleteFile = (i: number) => {
+    const newFiles = [...files]; 
+    newFiles.splice(i, 1); 
+    setFiles(newFiles); 
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -508,53 +527,6 @@ export default function Page() {
             </Typography>
             <Divider style={{margin: '10px'}} />
 
-            {/* <Grid 
-                container
-                direction={'row'}
-                alignItems={'center'}
-              > 
-                <Grid 
-                  container 
-                  spacing={2} 
-                  style={{margin: '5px'}}
-                  direction="column"
-                  item
-                  xs={12}
-                  sm={4}
-                  > 
-                  <Typography fontWeight={'bold'} style={{marginBottom: '5px'}}>
-                        Field Name
-                    </Typography>
-              </Grid>
-
-              <Grid 
-                  container 
-                  spacing={2} 
-                  style={{margin: '5px'}}
-                  direction="column"
-                  item
-                  xs={12}
-                  sm={4}
-                  > 
-                  <Typography fontWeight={'bold'} style={{marginBottom: '5px'}}>
-                        Field Type
-                    </Typography>
-              </Grid>
-
-              <Grid 
-                  container 
-                  spacing={2} 
-                  style={{margin: '5px'}}
-                  direction="column"
-                  item
-                  xs={2}
-                  > 
-                  <Typography fontWeight={'bold'} style={{marginBottom: '5px'}}>
-                        Action
-                    </Typography>
-              </Grid>
-            </Grid> */}
-
             <Grid 
               container
               direction={'row'}
@@ -698,7 +670,133 @@ export default function Page() {
                 </Button>
             </Grid>
 
-          
+            <Grid item xs={12}>
+            <Typography 
+                variant="h6" 
+                component="div" 
+                sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+            >
+                Request Files
+            </Typography>
+            <Divider style={{margin: '10px'}} />
+
+            <Grid 
+              container
+              direction={'row'}
+              alignItems={'center'}
+            > 
+              <Typography 
+                style={{marginBottom: '10px', marginTop: '20px', fontStyle: 'italic'}}
+                variant="body2"
+              >
+                Add fields to request files from tenant.
+                This requested fields would be sent to the tenant via email to submit. The filled information would be stored in the tenant&rsquo;s profile.
+              </Typography>
+            </Grid>
+
+            {files.map((file, index) => ( 
+              <Grid 
+                key={index}
+                container
+                direction={'row'}
+                alignItems={'center'}
+              > 
+                <Grid 
+                  container 
+                  spacing={2} 
+                  style={{margin: '5px'}}
+                  direction="column"
+                  item
+                  xs={12}
+                  sm={4}
+                  key={index}
+                  >
+                    <input 
+                      type="text"
+                      placeholder="Name"
+                      name="name"
+                      value={file.name} 
+                      onChange={(e) => handleFileChange(e, index)} 
+                      required 
+                      style={{
+                        width: '100%',
+                        height: '55px', 
+                        padding: '12px 20px',
+                        backgroundColor: '#fff',
+                        marginTop: '5px',
+                        color: '#000',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                        border: '1px solid #000',
+                        borderRadius: '5px',
+                    }}
+                    /> 
+                </Grid>
+                <Grid 
+                    container 
+                    spacing={2} 
+                    style={{margin: '5px'}}
+                    direction="column"
+                    alignItems={'flex-end'}
+                    item
+                    xs={12}
+                    sm={3}
+                >
+                  <Button 
+                    variant="outlined" 
+                    onClick={() => handleDeleteFile(index)}
+                    color="error"
+                    style={{
+                      height: '50px',
+                      color: 'red',
+                      borderRadius: '10px',
+                      fontWeight: 'bold',
+                      width: '150px',
+                      margin: '10px'
+                    }}
+                    startIcon={
+                    <DeleteIcon 
+                      style={{color: 'red'}}
+                    />
+                    }
+                  >
+                    Delete
+                  </Button>
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+
+          <Grid 
+            container 
+            spacing={2} 
+            style={{margin: '5px'}}
+            direction="column"
+            item
+            xs={1}
+          >
+            <Button 
+              variant="outlined" 
+              onClick={handleAddFile}
+              style={{
+                  backgroundColor: 'green', 
+                  height: '50px',
+                  color: '#fff',
+                  borderRadius: '10px',
+                  fontWeight: 'bold',
+                  width: '150px'
+              }}
+              startIcon={
+              <AddCircleIcon 
+                style={{color: '#fff'}}
+              />
+              }
+            >
+              Add File
+            </Button>
+          </Grid>
+
           <Grid
           container
           alignItems={'center'}

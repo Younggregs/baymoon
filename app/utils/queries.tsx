@@ -295,6 +295,12 @@ const TENANT_BY_ID = gql`
       property,
       unit, 
       moreInfo,
+      tenantHasRecorded,
+      files{
+        id,
+        title,
+        image
+      },
       landlord,
       createdBy{ 
         firstName,

@@ -109,8 +109,8 @@ const CREATE_UNIT = gql`
 
 {/* Tenants Queries */}
 const CREATE_TENANT = gql`
-     mutation CreateTenant($property_id: String!, $unit_id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString) {
-  createTenant(propertyId: $property_id, unitId: $unit_id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info) {
+     mutation CreateTenant($property_id: String!, $unit_id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString, $files: [String]) {
+  createTenant(propertyId: $property_id, unitId: $unit_id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info, files: $files) {
     tenant {
         id,
     },
@@ -126,6 +126,20 @@ const UPDATE_TENANT = gql`
      mutation updateTenant($id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString) {
   updateTenant(id: $id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info) {
     tenant {
+        id,
+    },
+    success,
+    errors {
+        message
+    }
+  }
+ }
+`;
+
+const UPDATE_TENANT_FILE = gql`
+     mutation updateTenantFile($id: String!, $file: Upload!) {
+  updateTenantFile(id: $id, file: $file) {
+    tenantFile {
         id,
     },
     success,
@@ -162,5 +176,6 @@ export {
     CREATE_UNIT,
     CREATE_TENANT,
     CREATE_TRANSACTION,
-    UPDATE_TENANT
+    UPDATE_TENANT,
+    UPDATE_TENANT_FILE
 };
