@@ -119,11 +119,16 @@ export default function Page(props: Props) {
     });
   }
 
-  const delete_user =  async () => {
+  const delete_user = () => {
     // Delete User Query
-    await executeQuery()
-    router.push('/users')
+    executeQuery()
   }
+
+  React.useEffect(() => {
+    if (!fetching2 && !error2 && data2) {
+      router.push('/users')
+    }
+  }, [fetching2, data2, error2, router])
 
 
   React.useEffect(() => {
