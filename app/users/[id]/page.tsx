@@ -78,6 +78,7 @@ export default function Page(props: Props) {
 
   const [res2, executeQuery] = useQuery({query: DELETE_USER, variables: {ids: [params?.id]}, pause: true
   });
+  const { data: data2, fetching: fetching2, error: error2 } = res2;
  
   const [updateUserResult, updateUser] = useMutation(UPDATE_USER);
 
@@ -118,11 +119,9 @@ export default function Page(props: Props) {
     });
   }
 
-  const delete_user = () => {
+  const delete_user =  () => {
     // Delete User Query
-    setIsLoading(true)
     executeQuery()
-    setIsLoading(false)
     router.push('/users')
   }
 
@@ -701,7 +700,7 @@ export default function Page(props: Props) {
                     {errorMessage}
                 </Typography>
             )}
-            {isLoading ? <ActivityIndicator /> : 
+            {fetching2 ? <ActivityIndicator /> : 
             (
             <Grid
               container

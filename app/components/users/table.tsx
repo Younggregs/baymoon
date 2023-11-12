@@ -191,15 +191,14 @@ interface EnhancedTableToolbarProps {
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected, selected } = props;
   const [isLoading, setIsLoading] = React.useState(false)
-  const [res2, executeQuery] = useQuery({query: DELETE_USER, variables: {ids: selected}, pause: true
+  const [res, executeQuery] = useQuery({query: DELETE_USER, variables: {ids: selected}, pause: true
   });
+
+  const { data, fetching, error } = res;
 
   const delete_users = () => {
     // Delete User Query
-    setIsLoading(true)
     executeQuery()
-    setIsLoading(false)
-    // Refresh Page
     window.location.reload();
   }
 
@@ -235,7 +234,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       )}
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          {isLoading ? ( 
+          {fetching ? ( 
             <ActivityIndicator />
           ) : (
           <IconButton
