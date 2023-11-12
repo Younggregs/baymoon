@@ -119,9 +119,9 @@ export default function Page(props: Props) {
     });
   }
 
-  const delete_user =  () => {
+  const delete_user =  async () => {
     // Delete User Query
-    executeQuery()
+    await executeQuery()
     router.push('/users')
   }
 

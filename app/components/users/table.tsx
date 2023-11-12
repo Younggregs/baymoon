@@ -196,9 +196,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
   const { data, fetching, error } = res;
 
-  const delete_users = () => {
+  const delete_users = async () => {
     // Delete User Query
-    executeQuery()
+    await executeQuery()
     window.location.reload();
   }
 
