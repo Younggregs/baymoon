@@ -92,12 +92,17 @@ export default function Page(props: Props) {
   const [res2, executeQuery] = useQuery({query: DELETE_TENANT, variables: {ids: [params?.id]}, pause: true
   });
 
+  const { data: data2, fetching: fetching2, error: error2 } = res2;
+
   const delete_tenant = () => {
-    setIsLoading(true)
     executeQuery()
-    setIsLoading(false)
-    router.push('/tenants')
   }
+
+  React.useEffect(() => {
+    if (!fetching2 && !error2 && data2) {
+      router.push('/tenants')
+    }
+  }, [fetching2, data2, error2, router])
   
 
   const handleDrawerToggle = () => {
@@ -538,7 +543,7 @@ export default function Page(props: Props) {
               </Link>
             </Button>
             
-            {isLoading ? <ActivityIndicator /> : 
+            {fetching2 ? <ActivityIndicator /> : 
             (
             <Button 
                 variant="contained" 

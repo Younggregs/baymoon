@@ -61,12 +61,17 @@ export default function Page(props: Props) {
   const [res2, executeQuery] = useQuery({query: DELETE_TRANSACTION, variables: {ids: [params?.id]}, pause: true
   });
 
+  const { data: data2, fetching: fetching2, error: error2 } = res2;
+
   const delete_transaction = () => {
-    setIsLoading(true)
     executeQuery()
-    setIsLoading(false)
-    router.push('/income')
   }
+
+  React.useEffect(() => {
+    if (!fetching2 && !error2 && data2) {
+      router.push('/income')
+    }
+  }, [fetching2, data2, error2, router])
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -509,7 +514,7 @@ export default function Page(props: Props) {
             justifyContent={'center'}
         >
             {/* Create User button */}
-            {isLoading ? <ActivityIndicator /> : 
+            {fetching2 ? <ActivityIndicator /> : 
             (
             <Button 
                 variant="contained" 

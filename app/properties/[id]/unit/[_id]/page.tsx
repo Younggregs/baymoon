@@ -70,12 +70,18 @@ export default function Page(props: Props) {
   const [res3, executeDeleteQuery] = useQuery({query: DELETE_UNIT, variables: {ids: [params?._id]}, pause: true
   });
 
+  const { data: data3, fetching: fetching3, error: error3 } = res3;
+
+
   const delete_unit = () => {
-    setIsLoading(true)
     executeDeleteQuery()
-    setIsLoading(false)
-    router.back()
   }
+
+  React.useEffect(() => {
+    if (!fetching3 && !error3 && data3) {
+      router.back()
+    }
+  }, [fetching3, data3, error3, router])
   
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -620,7 +626,7 @@ export default function Page(props: Props) {
               xs={10}
             >
               {/* Create User button */}
-              {isLoading ? <ActivityIndicator /> : 
+              {fetching3 ? <ActivityIndicator /> : 
               (
               <Button 
                   variant="contained" 
