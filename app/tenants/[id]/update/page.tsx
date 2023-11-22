@@ -31,7 +31,10 @@ import Typography from '@mui/material/Typography';
 import stylesMain from '../../../page.module.css';
 import Button from '@mui/material/Button';
 import ProfileMenu from '../../../components/navigation/profile-menu';
-import Link from "next/link"
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useRouter, useSearchParams } from 'next/navigation'
 import Grid from '@mui/material/Grid';
 import File from '@/app/components/tenants/file';
@@ -41,6 +44,7 @@ import { UPDATE_TENANT } from '@/app/utils/mutations';
 import { useMutation, useQuery } from 'urql';
 import { TENANT_BY_ID } from '@/app/utils/queries';
 import ActivityIndicator from '@/app/components/activity-indicator';
+import formatDate from '@/app/lib/format/date';
 
 const drawerWidth = 240;
 const thumbsContainer = {
@@ -82,7 +86,10 @@ export default function Page(props: Props) {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { params } = props;
-  const [category, setCategory] = React.useState('');
+  
+  const [checked, setChecked] = React.useState(true);
+  const [start_date, setStartDate] = React.useState<Date | null>(new Date());
+  const [end_date, setEndDate] = React.useState<Date | null>(new Date());
   const [isLoading, setIsLoading] = React.useState(false)
   const [errorMessage, setError] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
@@ -106,6 +113,8 @@ export default function Page(props: Props) {
       setEmail(data?.tenantById?.email)
       setPhoneNumber(data?.tenantById?.phoneNumber)
       setTodos(JSON.parse(data?.tenantById?.moreInfo))
+      setStartDate( new Date(data?.tenantById?.startDuration))
+      setEndDate( new Date(data?.tenantById?.endDuration))
     }
   }, [data])
 
@@ -118,7 +127,9 @@ export default function Page(props: Props) {
       last_name,
       email,
       phone_number,
-      more_info: JSON.stringify(todos)
+      more_info: JSON.stringify(todos),
+      start_duration: start_date,
+      end_duration: end_date
     }
     updateTenant(data).then((result) => {
       setIsLoading(false)
@@ -138,10 +149,8 @@ export default function Page(props: Props) {
     setTodos(newTodos);
   }; 
   
-  const handleDeleteTodo = (i: number) => { 
-    const newTodos = [...todos]; 
-    newTodos.splice(i, 1); 
-    setTodos(newTodos); 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
   }; 
   
 
@@ -511,6 +520,62 @@ export default function Page(props: Props) {
                         borderRadius: '5px',
                     }}
                 />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography 
+                  variant="h6" 
+                  component="div" 
+                  sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+              >
+                Duration of Lease/Rent
+              </Typography>
+              <Divider style={{margin: '10px'}} />
+
+              <Grid 
+                container
+                alignItems={'center'}
+                justifyContent={'center'}
+              >
+                <Grid 
+                  spacing={2} 
+                  style={{margin: '5px'}}
+                  direction="column"
+                  item 
+                  xs={12}
+                  sm={5}
+                >
+                  <Typography fontWeight={'bold'}>
+                    Start date
+                  </Typography>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['DatePicker']}>
+                          <DatePicker 
+                            label="Select start date" 
+                            onChange={(e: Date | null) => setStartDate(e)}/>
+                      </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+                <Grid 
+                  spacing={2} 
+                  style={{margin: '5px'}}
+                  direction="column"
+                  item
+                  xs={12}
+                  sm={5}
+                >
+                  <Typography fontWeight={'bold'}>
+                    End date
+                  </Typography>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['DatePicker']}>
+                          <DatePicker 
+                            label="Select end date" 
+                            onChange={(e: Date | null) => setEndDate(e)}/>
+                      </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+            </Grid>
             </Grid>
 
             {/* Add Fields from moreInfo json string */}

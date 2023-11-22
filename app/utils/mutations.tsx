@@ -109,8 +109,8 @@ const CREATE_UNIT = gql`
 
 {/* Tenants Queries */}
 const CREATE_TENANT = gql`
-     mutation CreateTenant($property_id: String!, $unit_id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString, $files: [String]) {
-  createTenant(propertyId: $property_id, unitId: $unit_id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info, files: $files) {
+     mutation CreateTenant($property_id: String!, $unit_id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString, $files: [String], $start_duration: String, $end_duration: String, $send_email: Boolean) {
+  createTenant(propertyId: $property_id, unitId: $unit_id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info, files: $files, startDuration: $start_duration, endDuration: $end_duration, sendEmail: $send_email) {
     tenant {
         id,
     },
@@ -123,8 +123,8 @@ const CREATE_TENANT = gql`
 `;
 
 const UPDATE_TENANT = gql`
-     mutation updateTenant($id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString) {
-  updateTenant(id: $id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info) {
+     mutation updateTenant($id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString, $start_duration: String, $end_duration: String) {
+  updateTenant(id: $id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info, startDuration: $start_duration, endDuration: $end_duration) {
     tenant {
         id,
     },

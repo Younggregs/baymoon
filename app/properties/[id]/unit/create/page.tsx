@@ -120,7 +120,7 @@ export default function Page(props: Props) {
       }else if(!res?.success){
         console.log(res?.errors.message)
       }
-      else{
+      else if(res?.propertyUnit?.id){
         router.push(`/properties/${params?.id}/unit/${res?.propertyUnit?.id}`)
       }
       

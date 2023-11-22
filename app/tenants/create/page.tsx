@@ -24,7 +24,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import MailIcon from '@mui/icons-material/Mail';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { CREATE_TRANSACTION } from '@/app/utils/mutations';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -43,12 +47,14 @@ import { CREATE_TENANT } from '@/app/utils/mutations';
 import ActivityIndicator from '../../components/activity-indicator';
 import user from '@/app/lib/user-details';
 import NameTitle from '@/app/components/users/name-title';
+import Switch from '@mui/material/Switch';
 
 const drawerWidth = 240;
 
 export default function Page() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [checked, setChecked] = React.useState(true);
 
   const features = user().permissions[0] === '*' ? ['Dashboard', 'Properties', 'Tenants', 'Income', 'Expenses', 'Users'] : user().permissions;
 
@@ -61,6 +67,9 @@ export default function Page() {
   const [phone_number, setPhoneNumber] = React.useState('');
   const [todos, setTodos] = React.useState([{ name: "", type: "", value: "" }]); 
   const [files, setFiles] = React.useState([{name: ""}]);
+
+  const [start_date, setStartDate] = React.useState<Date | null>(new Date());
+  const [end_date, setEndDate] = React.useState<Date | null>(new Date());
 
   const [res] = useQuery({query: FETCH_PROPERTIES, variables: {search: ""} });
   const { data: properties, fetching, error } = res;
@@ -81,7 +90,10 @@ export default function Page() {
       property_id: property,
       unit_id: unit,
       more_info: JSON.stringify(todos),
-      files: files.map((file) => file.name)
+      files: files.map((file) => file.name),
+      start_duration: start_date,
+      end_duration: end_date,
+      send_email: checked
     }
     console.log(data)
     createTenant(data).then((result) => {
@@ -91,6 +103,10 @@ export default function Page() {
       }
     })
   }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
   
   const handleTodoChange = (e: any, i: number) => { 
     const field = e.target.name as keyof typeof todos[number]; 
@@ -518,6 +534,58 @@ export default function Page() {
                 )}
             </Grid>
 
+            <Grid item xs={12}>
+              <Typography 
+                  variant="h6" 
+                  component="div" 
+                  sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+              >
+                Duration of Lease/Rent
+              </Typography>
+              <Divider style={{margin: '10px'}} />
+
+              <Grid 
+                container
+                alignItems={'center'}
+                justifyContent={'center'}
+              >
+                <Grid 
+                  spacing={2} 
+                  style={{margin: '5px'}}
+                  direction="column"
+                  item 
+                  xs={12}
+                  sm={5}
+                >
+                  <Typography fontWeight={'bold'}>
+                    Start date
+                  </Typography>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['DatePicker']}>
+                          <DatePicker label="Select start date" onChange={(e: Date | null) => setStartDate(e)}/>
+                      </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+                <Grid 
+                  spacing={2} 
+                  style={{margin: '5px'}}
+                  direction="column"
+                  item
+                  xs={12}
+                  sm={5}
+                >
+                  <Typography fontWeight={'bold'}>
+                    End date
+                  </Typography>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['DatePicker']}>
+                          <DatePicker label="Select end date" onChange={(e: Date | null) => setEndDate(e)}/>
+                      </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+            </Grid>
+            </Grid>
+
           </Grid>
           </Grid>
 
@@ -799,6 +867,37 @@ export default function Page() {
             >
               Add File
             </Button>
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+          >
+          <Typography 
+              variant="h6" 
+              component="div" 
+              sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+            >
+              Send Tenant Email Notification
+            </Typography>
+            <Divider style={{margin: '10px'}} />
+            <Divider style={{margin: '10px'}} />
+            <Grid
+              container
+              justifyContent={'center'}
+              alignItems={'center'}
+            >
+              <Switch
+                checked={checked}
+                onChange={handleChange}
+                inputProps={{ 'aria-label': 'controlled' }}
+                style={{color: '#000'}}
+                color={'secondary'}
+              />
+              <Typography>
+                {checked ? 'Yes' : 'No'}
+              </Typography>
+            </Grid>
           </Grid>
 
           <Grid

@@ -105,6 +105,17 @@ export default function Page(props: Props) {
   }, [fetching2, data2, error2, router])
   
 
+  const getStatus = (start: Date, end: Date) => {
+    const s = new Date(start)
+    const e = new Date(end)
+
+    if(s.getTime() > e.getTime()){
+      return false
+    }
+
+    return true
+  }
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -449,6 +460,98 @@ export default function Page(props: Props) {
                 </Typography>
             </Grid>
           </Grid>
+          </Grid>
+
+          <Grid 
+            container
+            alignItems={'center'}
+            justifyContent={'center'}
+          >
+            <Grid item xs={12}>
+              <Typography 
+                  variant="h6" 
+                  component="div" 
+                  sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+              >
+                Duration of Lease/Rent
+              </Typography>
+              <Divider style={{margin: '10px'}} />
+            </Grid>
+
+            <Grid 
+              container 
+              spacing={2} 
+              style={{margin: '5px'}}
+              direction="column"
+              item
+              xs={12}
+              sm={5}
+            >
+                <Typography fontWeight={'bold'}>
+                    Date Created
+                </Typography>
+                <Typography>
+                    {formatDate(new Date(data?.tenantById?.startDuration))}
+                </Typography>
+            </Grid>
+
+            <Grid 
+              container 
+              spacing={2} 
+              style={{margin: '5px'}}
+              direction="column"
+              item
+              xs={12}
+              sm={5}
+            >
+                <Typography fontWeight={'bold'}>
+                    Date Ending
+                </Typography>
+                <Typography>
+                    {formatDate(new Date(data?.tenantById?.endDuration))}
+                </Typography>
+            </Grid>
+
+            <Grid 
+              container 
+              spacing={2} 
+              style={{margin: '5px'}}
+              item
+              xs={12}
+              sm={6}
+            >
+              <Typography fontWeight={'bold'}>
+                Status: 
+              </Typography>
+                {
+                getStatus(data?.tenantById?.startDuration, data?.tenantById?.endDuration) ? (
+                  <Typography
+                  style={{
+                    backgroundColor: '#228B22',
+                    height: '30px',
+                    color: '#fff',
+                    borderRadius: '10px',
+                    fontWeight: 'bold',
+                    width: '100px',
+                    marginBottom: '35px',
+                    textAlign: 'center'
+                  }}
+                  >Active </Typography>
+                ) : <Typography
+                    style={{
+                      backgroundColor: '#ff0000',
+                      height: '30px',
+                      color: '#fff',
+                      borderRadius: '10px',
+                      fontWeight: 'bold',
+                      width: '100px',
+                      marginBottom: '35px',
+                      textAlign: 'center'
+                    }}
+                  >Expired </Typography>
+                }
+            </Grid>
+
           </Grid>
 
           <Grid 

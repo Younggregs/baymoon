@@ -296,6 +296,8 @@ const TENANT_BY_ID = gql`
       unit, 
       moreInfo,
       tenantHasRecorded,
+      startDuration,
+      endDuration,
       files{
         id,
         title,
