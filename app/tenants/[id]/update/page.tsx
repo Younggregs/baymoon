@@ -808,20 +808,6 @@ export default function Page(props: Props) {
             </Typography>
             <Divider style={{margin: '10px'}} />
 
-            <Grid 
-              container
-              direction={'row'}
-              alignItems={'center'}
-            > 
-              <Typography 
-                style={{marginBottom: '10px', marginTop: '20px', fontStyle: 'italic'}}
-                variant="body2"
-              >
-                Add fields to request files from tenant.
-                This requested fields would be sent to the tenant via email to submit. The filled information would be stored in the tenant&rsquo;s profile.
-              </Typography>
-            </Grid>
-
             {newFiles.map((file, index) => ( 
               <Grid 
                 key={index}
