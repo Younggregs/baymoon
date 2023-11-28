@@ -61,6 +61,8 @@ export default function Page() {
   const [isLoading, setIsLoading] = React.useState(false)
   const [property, setProperty] = React.useState('');
   const [unit, setUnit] = React.useState('');
+  const [success, setSuccess] = React.useState(false)
+  const [errorMessage, setError] = React.useState('')
   const [first_name, setFirstName] = React.useState('');
   const [last_name, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -82,6 +84,21 @@ export default function Page() {
 
   const submit = () => {
     setIsLoading(true)
+    setError('')
+    let emptyFields = false;
+    todos.forEach((field) => {
+      if (field.name === '' || field.type === '') {
+        emptyFields = true;
+      }
+    })
+
+    if (emptyFields) {
+      setIsLoading(false)
+      setError('Please fill all new fields')
+      return;
+    }
+
+
     const data = {
       first_name,
       last_name,
@@ -100,6 +117,9 @@ export default function Page() {
       setIsLoading(false)
       if (result.data?.createTenant?.success) {
         router.push(`/tenants/${result.data?.createTenant?.tenant?.id}`)
+      }
+      else{
+        setError(result.data?.updateTenant?.errors[0]?.message)
       }
     })
   }
@@ -614,7 +634,7 @@ export default function Page() {
             </Grid>
                   
 
-                {todos.map((todo, index) => ( 
+              {todos.map((todo, index) => ( 
                   <Grid 
                     key={index}
                     container
@@ -742,7 +762,7 @@ export default function Page() {
                 </Button>
             </Grid>
 
-            <Grid item xs={12}>
+          <Grid item xs={12}>
             <Typography 
                 variant="h6" 
                 component="div" 
@@ -915,6 +935,15 @@ export default function Page() {
             item
             xs={10}
           >
+          {success ? (
+              <Typography style={{color: 'green'}}>
+                  Submitted Successfully
+              </Typography>
+          ) : (
+              <Typography style={{color: 'red'}}>
+                  {errorMessage}
+              </Typography>
+          )}
           {isLoading ? <ActivityIndicator /> : 
           (
             <Button 

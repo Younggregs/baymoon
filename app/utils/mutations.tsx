@@ -123,8 +123,8 @@ const CREATE_TENANT = gql`
 `;
 
 const UPDATE_TENANT = gql`
-     mutation updateTenant($id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString, $start_duration: String, $end_duration: String) {
-  updateTenant(id: $id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info, startDuration: $start_duration, endDuration: $end_duration) {
+     mutation updateTenant($id: String!, $first_name: String!, $last_name: String!, $email: String!, $phone_number: String, $more_info: JSONString, $files: [String], $start_duration: String, $end_duration: String) {
+  updateTenant(id: $id, firstName: $first_name, lastName: $last_name, email: $email, phoneNumber: $phone_number, moreInfo: $more_info, files: $files, startDuration: $start_duration, endDuration: $end_duration) {
     tenant {
         id,
     },

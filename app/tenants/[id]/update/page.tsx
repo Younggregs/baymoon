@@ -44,7 +44,10 @@ import { UPDATE_TENANT } from '@/app/utils/mutations';
 import { useMutation, useQuery } from 'urql';
 import { TENANT_BY_ID } from '@/app/utils/queries';
 import ActivityIndicator from '@/app/components/activity-indicator';
-import formatDate from '@/app/lib/format/date';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 const drawerWidth = 240;
 const thumbsContainer = {
@@ -91,13 +94,15 @@ export default function Page(props: Props) {
   const [start_date, setStartDate] = React.useState<Date | null>(new Date());
   const [end_date, setEndDate] = React.useState<Date | null>(new Date());
   const [isLoading, setIsLoading] = React.useState(false)
-  const [errorMessage, setError] = React.useState(false)
+  const [errorMessage, setError] = React.useState('')
   const [success, setSuccess] = React.useState(false)
   const [first_name, setFirstName] = React.useState('');
   const [last_name, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [phone_number, setPhoneNumber] = React.useState('');
-  const [todos, setTodos] = React.useState([]); 
+  const [todos, setTodos] = React.useState([{ name: "", type: "", value: "" }]);
+  const [extraFields, setExtraFields] = React.useState([{ name: "", type: "", value: "" }]); 
+  const [newFiles, setNewFiles] = React.useState([{name: ""}]);
 
   const [res] = useQuery({query: TENANT_BY_ID, variables: {id: params?.id} });
   const { data, fetching, error } = res;
@@ -121,19 +126,37 @@ export default function Page(props: Props) {
 
   const submit = () => {
     setIsLoading(true)
+    setError('')
+    // Verify extraFields values are not empty
+    let emptyFields = false;
+    extraFields.forEach((field) => {
+      if (field.name === '' || field.type === '') {
+        emptyFields = true;
+      }
+    })
+
+    if (emptyFields) {
+      setIsLoading(false)
+      setError('Please fill all new fields')
+      return;
+    }
+
     const data = {
       id: params?.id,
       first_name,
       last_name,
       email,
       phone_number,
-      more_info: JSON.stringify(todos),
+      more_info: JSON.stringify(todos.concat(extraFields)),
+      files: newFiles.map((file) => file.name),
       start_duration: start_date,
       end_duration: end_date
     }
+    console.log('data: ', data)
     updateTenant(data).then((result) => {
       setIsLoading(false)
       if (result.data?.updateTenant?.success) {
+        setExtraFields([])
         setSuccess(result.data?.updateTenant?.success)
       }
       else{
@@ -152,11 +175,45 @@ export default function Page(props: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   }; 
+
+  const handleExtraFieldsChange = (e: any, i: number) => { 
+    const field = e.target.name as keyof typeof extraFields[number]; 
+    const newExtraFields = [...extraFields];
+    newExtraFields[i][field] = e.target.value; 
+    setExtraFields(newExtraFields); 
+  }; 
   
+  const handleAddExtraFields = () => { 
+    setExtraFields([...extraFields, { name: "", type: "", value: "" }]); 
+  }; 
+  
+  const handleDeleteExtraFields = (i: number) => { 
+    const newExtraFields = [...extraFields]; 
+    newExtraFields.splice(i, 1); 
+    setExtraFields(newExtraFields); 
+  }; 
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  // Handle files
+  const handleFileChange = (e: any, i: number) => {
+    const field = e.target.name as keyof typeof newFiles[number]; 
+    const nFiles = [...newFiles];
+    nFiles[i][field] = e.target.value; 
+    setNewFiles(nFiles); 
+  }
+
+  const handleAddFile = () => {
+    setNewFiles([...newFiles, {name: ""}]);
+  }
+
+  const handleDeleteFile = (i: number) => {
+    const nFiles = [...newFiles]; 
+    nFiles.splice(i, 1); 
+    setNewFiles(nFiles); 
+  }
 
   // const [files, setFiles] = React.useState([]);
   // const [files, setFiles] = React.useState<{ preview: string }[]>([]);
@@ -522,6 +579,183 @@ export default function Page(props: Props) {
                 />
             </Grid>
 
+            {/* Add Fields from moreInfo json string */}
+            {data?.tenantById?.moreInfo && JSON.parse(data?.tenantById?.moreInfo).map((todo: any, index: number) => (
+                <Grid 
+                container 
+                spacing={2} 
+                style={{margin: '5px'}}
+                direction="column"
+                item
+                xs={12}
+                sm={5}
+                key={index}
+            >
+                <Typography fontWeight={'bold'}>
+                  {todo?.name}
+                </Typography>
+                <input
+                  type="text"
+                  placeholder={todo?.name}
+                  name="value"
+                  value={(todos[index] as { value: string })?.value}
+                  onChange={(e) => handleTodoChange(e, index)}
+                    style={{
+                        width: '100%',
+                        height: '60px', 
+                        padding: '12px 20px',
+                        backgroundColor: '#fff',
+                        marginTop: '5px',
+                        color: '#000',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                        border: '1px solid #000',
+                        borderRadius: '5px',
+                    }}
+                />
+            </Grid>
+            ))}
+
+
+            <Grid item xs={12} style={{margin: '5px'}}>
+              <Typography 
+                  variant="h6" 
+                  component="div" 
+                  sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+              >
+                Add New Fields
+              </Typography>
+              <Divider style={{margin: '10px'}} />
+              {extraFields.map((extraField, index) => ( 
+                  <Grid 
+                    key={index}
+                    container
+                    direction={'row'}
+                alignItems={'center'}
+              > 
+                <Grid 
+                  container 
+                  spacing={2} 
+                  style={{margin: '5px'}}
+                  direction="column"
+                  item
+                  xs={12}
+                  sm={4}
+                  key={index}
+                  >
+                    <input 
+                      type="text"
+                      placeholder="Name"
+                      name="name"
+                      value={extraField.name} 
+                      onChange={(e) => handleExtraFieldsChange(e, index)} 
+                      required 
+                      style={{
+                        width: '100%',
+                        height: '55px', 
+                        padding: '12px 20px',
+                        backgroundColor: '#fff',
+                        marginTop: '5px',
+                        color: '#000',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                        border: '1px solid #000',
+                        borderRadius: '5px',
+                    }}
+                    /> 
+                </Grid>
+                <Grid 
+                    container 
+                    spacing={2} 
+                    style={{margin: '5px', marginTop: '0px'}}
+                    direction="column"
+                    item
+                    xs={12}
+                    sm={4}
+                >
+                    <FormControl fullWidth style={{marginTop: '10px'}}>
+                        <InputLabel id="demo-simple-select-label">
+                          Field Type
+                        </InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={extraField.type} 
+                            onChange={(e) => handleExtraFieldsChange(e, index)}
+                            label="Type"
+                            name="type"
+                        >
+                            <MenuItem value={'text'}>Text</MenuItem>
+                            <MenuItem value={'number'}>Number</MenuItem>
+                            <MenuItem value={'boolean'}>Yes/No</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid 
+                    container 
+                    spacing={2} 
+                    style={{margin: '5px'}}
+                    direction="column"
+                    alignItems={'flex-end'}
+                    item
+                    xs={12}
+                    sm={3}
+                >
+                  <Button 
+                    variant="outlined" 
+                    onClick={() => handleDeleteExtraFields(index)}
+                    color="error"
+                    style={{
+                      height: '50px',
+                      color: 'red',
+                      borderRadius: '10px',
+                      fontWeight: 'bold',
+                      width: '150px',
+                      margin: '10px'
+                    }}
+                    startIcon={
+                    <DeleteIcon 
+                      style={{color: 'red'}}
+                    />
+                    }
+                  >
+                    Delete
+                  </Button>
+                </Grid>
+              </Grid> 
+            ))} 
+            <Grid 
+                container 
+                spacing={2} 
+                style={{margin: '5px'}}
+                direction="column"
+                item
+                xs={1}
+              >
+                <Button 
+                  variant="outlined" 
+                  onClick={handleAddExtraFields}
+                  style={{
+                      backgroundColor: 'green', 
+                      height: '50px',
+                      color: '#fff',
+                      borderRadius: '10px',
+                      fontWeight: 'bold',
+                      width: '150px'
+                  }}
+                  startIcon={
+                  <AddCircleIcon 
+                    style={{color: '#fff'}}
+                  />
+                  }
+                >
+                  Add Field
+                </Button>
+            </Grid>
+          </Grid>
+
             <Grid item xs={12}>
               <Typography 
                   variant="h6" 
@@ -578,44 +812,6 @@ export default function Page(props: Props) {
             </Grid>
             </Grid>
 
-            {/* Add Fields from moreInfo json string */}
-            {data?.tenantById?.moreInfo && JSON.parse(data?.tenantById?.moreInfo).map((todo: any, index: number) => (
-                <Grid 
-                container 
-                spacing={2} 
-                style={{margin: '5px'}}
-                direction="column"
-                item
-                xs={12}
-                sm={5}
-                key={index}
-            >
-                <Typography fontWeight={'bold'}>
-                  {todo?.name}
-                </Typography>
-                <input
-                  type="text"
-                  placeholder={todo?.name}
-                  name="value"
-                  value={(todos[index] as { value: string })?.value}
-                  onChange={(e) => handleTodoChange(e, index)}
-                    style={{
-                        width: '100%',
-                        height: '60px', 
-                        padding: '12px 20px',
-                        backgroundColor: '#fff',
-                        marginTop: '5px',
-                        color: '#000',
-                        fontSize: '16px',
-                        outline: 'none',
-                        boxSizing: 'border-box',
-                        border: '1px solid #000',
-                        borderRadius: '5px',
-                    }}
-                />
-            </Grid>
-            ))}
-
           <Grid item xs={12}>
             <Typography 
                 variant="h6" 
@@ -632,6 +828,133 @@ export default function Page(props: Props) {
                 fileObj={file}
               />
             ))}
+          </Grid>
+
+          <Grid item xs={12}>
+            <Typography 
+                variant="h6" 
+                component="div" 
+                sx={{ fontWeight: 'bold', marginTop: '10px', textAlign: 'center' }}
+            >
+                Request Files
+            </Typography>
+            <Divider style={{margin: '10px'}} />
+
+            <Grid 
+              container
+              direction={'row'}
+              alignItems={'center'}
+            > 
+              <Typography 
+                style={{marginBottom: '10px', marginTop: '20px', fontStyle: 'italic'}}
+                variant="body2"
+              >
+                Add fields to request files from tenant.
+                This requested fields would be sent to the tenant via email to submit. The filled information would be stored in the tenant&rsquo;s profile.
+              </Typography>
+            </Grid>
+
+            {newFiles.map((file, index) => ( 
+              <Grid 
+                key={index}
+                container
+                direction={'row'}
+                alignItems={'center'}
+              > 
+                <Grid 
+                  container 
+                  spacing={2} 
+                  style={{margin: '5px'}}
+                  direction="column"
+                  item
+                  xs={12}
+                  sm={4}
+                  key={index}
+                  >
+                    <input 
+                      type="text"
+                      placeholder="Name"
+                      name="name"
+                      value={file.name} 
+                      onChange={(e) => handleFileChange(e, index)} 
+                      required 
+                      style={{
+                        width: '100%',
+                        height: '55px', 
+                        padding: '12px 20px',
+                        backgroundColor: '#fff',
+                        marginTop: '5px',
+                        color: '#000',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                        border: '1px solid #000',
+                        borderRadius: '5px',
+                    }}
+                    /> 
+                </Grid>
+                <Grid 
+                    container 
+                    spacing={2} 
+                    style={{margin: '5px'}}
+                    direction="column"
+                    alignItems={'flex-end'}
+                    item
+                    xs={12}
+                    sm={3}
+                >
+                  <Button 
+                    variant="outlined" 
+                    onClick={() => handleDeleteFile(index)}
+                    color="error"
+                    style={{
+                      height: '50px',
+                      color: 'red',
+                      borderRadius: '10px',
+                      fontWeight: 'bold',
+                      width: '150px',
+                      margin: '10px'
+                    }}
+                    startIcon={
+                    <DeleteIcon 
+                      style={{color: 'red'}}
+                    />
+                    }
+                  >
+                    Delete
+                  </Button>
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+
+          <Grid 
+            container 
+            spacing={2} 
+            style={{margin: '5px'}}
+            direction="column"
+            item
+            xs={1}
+          >
+            <Button 
+              variant="outlined" 
+              onClick={handleAddFile}
+              style={{
+                  backgroundColor: 'green', 
+                  height: '50px',
+                  color: '#fff',
+                  borderRadius: '10px',
+                  fontWeight: 'bold',
+                  width: '150px'
+              }}
+              startIcon={
+              <AddCircleIcon 
+                style={{color: '#fff'}}
+              />
+              }
+            >
+              Add File
+            </Button>
           </Grid>
 
           </Grid>
